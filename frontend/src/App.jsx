@@ -3,6 +3,7 @@ import Topbar from './components/topbar'
 import Foryou from './components/foryou'
 import Trending from './components/trending'
 import Chatbot from './components/chatbot'
+import Bottombar from './components/Bottombar'
 
 const App = () => {
   return (
@@ -21,6 +22,9 @@ const App = () => {
 
       
       <Chatbot />
+      <Bottombar />
+    
+
 
     </div>
   )

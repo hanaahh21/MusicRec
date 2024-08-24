@@ -1,13 +1,14 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react';
 
 const Chatbot = () => {
-    const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-    const toggleChatWindow = () => {
-      setIsOpen(!isOpen);
-    };
+  const toggleChatWindow = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <div className="fixed bottom-4 right-4">
+    <div className="fixed bottom-4 right-4 z-50">
       {/* Chatbot Icon */}
       <button
         onClick={toggleChatWindow}
@@ -18,7 +19,7 @@ const Chatbot = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-16 right-4 bg-white shadow-lg rounded-lg p-4 w-80 max-w-xs">
+        <div className="fixed bottom-16 right-4 bg-white shadow-lg rounded-lg p-4 w-80 max-w-xs z-50">
           <div className="text-lg font-bold mb-2">Chat with us</div>
           <div className="h-60 overflow-auto border border-gray-300 p-2 mb-2">
             {/* Chat messages go here */}
@@ -31,7 +32,7 @@ const Chatbot = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Chatbot
+export default Chatbot;
