@@ -1,7 +1,13 @@
 import React,{useState} from 'react'
+import { useNavigate } from 'react-router-dom';
 
 
 const Topbar = () => {
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    navigate('/login'); // Navigate to the login page
+  };
   return (
     <div className="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
       {/* Logo or Brand Name */}
@@ -21,7 +27,9 @@ const Topbar = () => {
 
       {/* Authentication Buttons */}
       <div className="flex space-x-4">
-        <button className="bg-transparent hover:bg-blue-500 text-white font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded-lg">
+        <button 
+         className="bg-transparent hover:bg-blue-500 text-white font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded-lg"
+         onClick={handleLoginClick} >
           Login
         </button>
         <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">
