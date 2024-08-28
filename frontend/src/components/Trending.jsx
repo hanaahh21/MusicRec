@@ -5,7 +5,7 @@ const Trending = () => {
     <div>
       <h2 className="text-2xl font-bold mb-4">Trending</h2>
       {/* Placeholder for trending content */}
-      <div className="space-y-4">
+      <div className="flex space-x-4">
         <div className="p-4 bg-white rounded-lg shadow-md">
           <h3 className="font-semibold">Trending Song 1</h3>
         </div>
