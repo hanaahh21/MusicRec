@@ -3,7 +3,7 @@ from pydantic import BaseModel, EmailStr
 from enum import Enum
 from sqlalchemy.orm import Session
 from database import SessionLocal, get_db
-import models
+import usermodel
 
 app = FastAPI()
 db = SessionLocal()
@@ -28,7 +28,7 @@ class User(BaseModel):
     
 @app.get("/", response_model=list[User], status_code=status.HTTP_200_OK)
 def getAll_Users():
-    return db.query(models.User).all()
+    return db.query(usermodel.User).all()
 
 
 
@@ -36,7 +36,7 @@ def getAll_Users():
 # email error should be done
 @app.post("/register", response_model=User, status_code=status.HTTP_201_CREATED)
 def Register(user: User):
-    newUser = models.User(
+    newUser = usermodel.User(
                           firstname=user.firstname,
                           lastname = user.lastname, 
                           gender = user.gender,
@@ -46,8 +46,8 @@ def Register(user: User):
     newUser.set_password(user.password)
     
     
-    find_user = db.query(models.User).filter(models.User.username == newUser.username).first()
-    find_email = db.query(models.User).filter(models.User.email == newUser.email).first()
+    find_user = db.query(usermodel.User).filter(usermodel.User.username == newUser.username).first()
+    find_email = db.query(usermodel.User).filter(usermodel.User.email == newUser.email).first()
     
     if newUser.firstname == None or newUser.lastname == None or newUser.gender == None or newUser.email == None or newUser.username == None or newUser.password == None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="All fields are required")
@@ -72,7 +72,7 @@ def Register(user: User):
 @app.post("/login", response_model=OurBaseModel, status_code=status.HTTP_200_OK)
 def login(user : UserLogin, db: Session = Depends(get_db)):
     # Find the user by username
-    find_user = db.query(models.User).filter(models.User.username == user.username).first()
+    find_user = db.query(usermodel.User).filter(usermodel.User.username == user.username).first()
 
     # Check if user exists
     if find_user is None:
@@ -88,7 +88,7 @@ def login(user : UserLogin, db: Session = Depends(get_db)):
 
 @app.delete("/delete/{id}", status_code=200)
 def deleteUser(id:int):
-    find_user = db.query(models.User).filter(models.User.id == id).first()
+    find_user = db.query(usermodel.User).filter(usermodel.User.id == id).first()
     if find_user is not None:
         db.delete(find_user)
         db.commit()

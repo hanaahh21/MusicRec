@@ -1,3 +1,3 @@
-import models
+import usermodel
 
-models.create_tables()
+usermodel.create_tables()
