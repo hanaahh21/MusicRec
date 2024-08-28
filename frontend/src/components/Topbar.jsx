@@ -1,12 +1,13 @@
 import React,{useState} from 'react'
 import { useNavigate } from 'react-router-dom';
+import Loginpage from './Loginpage'
 
 
 const Topbar = () => {
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
-    navigate('/login'); // Navigate to the login page
+    window.open("/login", "_blank");
   };
   return (
     <div className="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
