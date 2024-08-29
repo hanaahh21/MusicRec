@@ -72,19 +72,10 @@ const SignupForm = () => {
           </button>
         </form>
 
-        <div className="mt-4 text-center">
-          <p>Or sign up using:</p>
-          <div className="flex justify-center space-x-4 mt-2">
-            <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg">
-              Google
-            </button>
-            <button className="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-lg">
-              Facebook
-            </button>
-          </div>
+      
         </div>
       </div>
-    </div>
+   
   );
 };
 

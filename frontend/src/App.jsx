@@ -8,7 +8,7 @@ import Loginpage from './components/Loginpage'
 import Sidebar from './components/Sidebar';
 import SignupForm from './components/SignupForm';
 import Topbar from './components/Topbar';
-import Trending2 from './components/Trending2';
+//import Trending2 from './components/Trending2';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -29,7 +29,7 @@ const App = () => {
           {isLoggedIn && <Sidebar />}
           <div className="content-area flex-1">
             <Routes>
-              <Route path="/" element={<Trending2 />} />
+              <Route path="/" element={<Trending />} />
               <Route path="/login" element={<Loginpage onLogin={handleLogin} />} />
               <Route path="/signup" element={<SignupForm />} />
 

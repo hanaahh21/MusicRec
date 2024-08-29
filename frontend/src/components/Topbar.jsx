@@ -8,11 +8,11 @@ const Topbar = () => {
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
-    window.open("/login", "_blank");
+    navigate("/login");
   };
 
   const handleSignupClick = () => {
-    window.open("/signup" , "_blank");
+    navigate("/signup" );
   };
   return (
     <div className="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
