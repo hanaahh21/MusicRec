@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes ,useLocation } from 'react-router-dom';
 import Topbar from './components/Topbar'
-import Foryou from './components/foryou'
+import Foryou from './components/Foryou'
 import Trending from './components/trending'
 import Chatbot from './components/chatbot'
 import Loginpage from './components/Loginpage'
@@ -12,11 +12,14 @@ const App = () => {
   const location = useLocation();
 
   // Check if the current path is "/login"
-  const isLoginPage = location.pathname == "/login";
+  const isLoginPage = location.pathname === "/login";
   console.log(isLoginPage)
+
+  const isSignupForm = location.pathname === "/signup";
+  console.log(isSignupForm)
   return (
     <div>
-      {!isLoginPage && (
+      {(!isLoginPage && !isSignupForm) && (
         <>
           <Topbar />
           <div className="flex flex-1">
@@ -40,7 +43,7 @@ const App = () => {
 
       <Routes>
         <Route path="/login" element={<Loginpage />} />
-        <Route path="/api/signup" element={<SignupForm />} />
+        <Route path="/signup" element={<SignupForm />} />
         {/* Add other routes here */}
       </Routes>
     </div>

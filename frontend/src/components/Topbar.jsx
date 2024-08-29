@@ -1,6 +1,7 @@
 import React,{useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import Loginpage from './Loginpage'
+import SignupForm from './SignupForm';
 
 
 const Topbar = () => {
@@ -8,6 +9,10 @@ const Topbar = () => {
 
   const handleLoginClick = () => {
     window.open("/login", "_blank");
+  };
+
+  const handleSignupClick = () => {
+    window.open("/signup" , "_blank");
   };
   return (
     <div className="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
@@ -33,7 +38,9 @@ const Topbar = () => {
          onClick={handleLoginClick} >
           Login
         </button>
-        <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">
+        <button 
+        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg"
+        onClick={handleSignupClick}>
           Sign Up
         </button>
       </div>
