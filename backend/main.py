@@ -2,8 +2,8 @@ from fastapi import FastAPI, status, HTTPException, Depends
 from pydantic import BaseModel, EmailStr
 from enum import Enum
 from sqlalchemy.orm import Session
-from backend.database import SessionLocal, get_db
-import backend.usermodel as usermodel
+from database import SessionLocal, get_db
+import usermodel as usermodel
 
 app = FastAPI()
 db = SessionLocal()

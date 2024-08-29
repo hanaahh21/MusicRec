@@ -1,6 +1,6 @@
 from sqlalchemy import String, Column, Integer, Boolean, Enum
 from passlib.context import CryptContext
-from backend.database import Base, engine
+from database import Base, engine
 
 #password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

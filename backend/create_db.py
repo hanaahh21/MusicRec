@@ -1,3 +1,3 @@
-import backend.usermodel as usermodel
+import usermodel as usermodel
 
 usermodel.create_tables()
