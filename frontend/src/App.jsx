@@ -1,55 +1,55 @@
-import React from 'react'
-import { BrowserRouter as Router, Route, Routes ,useLocation } from 'react-router-dom';
-import Topbar from './components/Topbar'
-import Foryou from './components/Foryou'
+import React, {useState} from 'react'
+import { BrowserRouter as Router, Route, Routes ,useLocation,Navigate } from 'react-router-dom';
+
+import Foryou from './components/foryou'
 import Trending from './components/trending'
 import Chatbot from './components/chatbot'
 import Loginpage from './components/Loginpage'
 import Sidebar from './components/Sidebar';
 import SignupForm from './components/SignupForm';
+import Topbar from './components/Topbar';
+import Trending2 from './components/Trending2';
 
 const App = () => {
-  const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Check if the current path is "/login"
-  const isLoginPage = location.pathname === "/login";
-  console.log(isLoginPage)
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
 
-  const isSignupForm = location.pathname === "/signup";
-  console.log(isSignupForm)
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
+
   return (
-    <div>
-      {(!isLoginPage && !isSignupForm) && (
-        <>
-          <Topbar />
-          <div className="flex flex-1">
-            <div className="w-1/3 p-4">
-              <Sidebar/>
-            </div>
-            {/* For You Section */}
-            <div className="w-1/3 p-4">
-              <Foryou />
-            </div>
-            {/* Trending Section */}
-            <div className="w-1/3 p-4 bg-gray-100">
-              <Trending />
-            </div>
-            
+    
+      <div>
+        <Topbar isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+        <div className="main-content flex">
+          {isLoggedIn && <Sidebar />}
+          <div className="content-area flex-1">
+            <Routes>
+              <Route path="/" element={<Trending2 />} />
+              <Route path="/login" element={<Loginpage onLogin={handleLogin} />} />
+              <Route path="/signup" element={<SignupForm />} />
+
+              {isLoggedIn ? (
+                <>
+                  <Route path="/foryou" element={<Foryou />} />
+                  <Route path="/chatbot" element={<Chatbot />} />
+                </>
+              ) : (
+                <>
+                  <Route path="/foryou" element={<Navigate to="/login" />} />
+                  <Route path="/chatbot" element={<Navigate to="/login" />} />
+                </>
+              )}
+            </Routes>
           </div>
-          <Chatbot />
-          
-        </>
-      )}
-
-      <Routes>
-        <Route path="/login" element={<Loginpage />} />
-        <Route path="/signup" element={<SignupForm />} />
-        {/* Add other routes here */}
-      </Routes>
-    </div>
-  );
-}
-  
-
+        </div>
+      </div>
+    
+                
+              )}
 
 export default App
