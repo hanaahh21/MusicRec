@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { BrowserRouter as Router, Route, Routes ,useLocation,Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import Foryou from './components/foryou'
 import Trending from './components/trending'
@@ -33,7 +33,7 @@ const App = () => {
               <Route path="/login" element={<Loginpage onLogin={handleLogin} />} />
               <Route path="/register" element={<RegisterPage />} />
 
-              {isLoggedIn ? (
+              {/* {isLoggedIn ? (
                 <>
                   <Route path="/foryou" element={<Foryou />} />
                   <Route path="/chatbot" element={<Chatbot />} />
@@ -43,12 +43,12 @@ const App = () => {
                   <Route path="/foryou" element={<Navigate to="/login" />} />
                   <Route path="/chatbot" element={<Navigate to="/login" />} />
                 </>
-              )}
+              )} */}
             </Routes>
           </div>
         </div>
       </div>
-    
+      
                 
               )}
 

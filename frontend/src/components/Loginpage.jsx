@@ -7,8 +7,10 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Define the state for isLoggedIn
 
   const navigate = useNavigate();
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,6 +23,7 @@ const LoginPage = () => {
       });
       console.log('User logged in:', response.data);
       setSuccess('Login successful!');
+      setIsLoggedIn(true); // Update the login state
       navigate('/foryou'); // Redirect to home or dashboard page
     } catch (error) {
       console.error('Error logging in:', error.response.data);
