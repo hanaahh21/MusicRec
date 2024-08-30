@@ -1,66 +1,62 @@
-import React , {useState} from 'react'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const Loginpage = () => {
-    const [isRegister, setIsRegister] = useState(false);
+const LoginPage = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-    const toggleRegister = () => {
-    setIsRegister(!isRegister);
-    };
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    try {
+      const response = await axios.post('http://localhost:8000/login', {
+        username: username,
+        password: password,
+      });
+      console.log('User logged in:', response.data);
+      setSuccess('Login successful!');
+      navigate('/foryou'); // Redirect to home or dashboard page
+    } catch (error) {
+      console.error('Error logging in:', error.response.data);
+      setError(error.response.data.detail);
+    }
+  };
+
+  const goToSignUp = () => {
+    navigate('/register'); // Navigate to SignUpPage
+  };
+
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          {isRegister ? 'Register' : 'Login'}
-        </h2>
-        
-        <form>
-          {isRegister && (
-          <>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstname">
-                First Name
-              </label>
-              <input
-                type="text"
-                id="firstname"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastname">
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="lastname"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+        {success && (
+          <p className="bg-green-100 text-green-800 p-4 rounded-lg mb-4 text-center">
+            {success}
+          </p>
+        )}
 
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+        {error && (
+          <p className="text-red-500 text-center mb-4">{error}</p>
+        )}
 
-          </>
-            
-            
-          )}
-          
+        <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-              User Name
+              Username
             </label>
             <input
               type="text"
               id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -71,24 +67,29 @@ const Loginpage = () => {
             <input
               type="password"
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          
-          <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full">
-            {isRegister ? 'Register' : 'Login'}
+
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full"
+          >
+            Login
           </button>
         </form>
 
         <p className="mt-4 text-center">
-          {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
-          <button onClick={toggleRegister} className="text-blue-500 hover:text-blue-600 font-semibold">
-            {isRegister ? 'Login' : 'Register'}
+          Don't have an account?{' '}
+          <button onClick={goToSignUp} className="text-blue-500 hover:text-blue-600 font-semibold">
+            Register
           </button>
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Loginpage
+export default LoginPage;

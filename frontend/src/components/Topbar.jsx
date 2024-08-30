@@ -1,7 +1,8 @@
 import React,{useState} from 'react'
 import { useNavigate } from 'react-router-dom';
-import Loginpage from './Loginpage'
-import SignupForm from './SignupForm';
+import LoginPage from './Loginpage';
+import RegisterPage from './Registerpage';
+
 
 
 const Topbar = () => {
@@ -12,7 +13,7 @@ const Topbar = () => {
   };
 
   const handleSignupClick = () => {
-    navigate("/signup" );
+    navigate("/register" );
   };
   return (
     <div className="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">

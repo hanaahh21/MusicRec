@@ -6,8 +6,8 @@ import Trending from './components/trending'
 import Chatbot from './components/chatbot'
 import Loginpage from './components/Loginpage'
 import Sidebar from './components/Sidebar';
-import SignupForm from './components/SignupForm';
 import Topbar from './components/Topbar';
+import RegisterPage from './components/Registerpage';
 //import Trending2 from './components/Trending2';
 
 const App = () => {
@@ -31,7 +31,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Trending />} />
               <Route path="/login" element={<Loginpage onLogin={handleLogin} />} />
-              <Route path="/signup" element={<SignupForm />} />
+              <Route path="/register" element={<RegisterPage />} />
 
               {isLoggedIn ? (
                 <>

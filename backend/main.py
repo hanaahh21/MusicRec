@@ -1,4 +1,5 @@
 from fastapi import FastAPI, status, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
 from enum import Enum
 from sqlalchemy.orm import Session
@@ -7,6 +8,15 @@ import usermodel as usermodel
 
 app = FastAPI()
 db = SessionLocal()
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Replace "*" with the actual URL of your frontend, e.g., ["http://localhost:3000"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class OurBaseModel(BaseModel):
     id : int
