@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 
+
 const Trending = () => {
   const trendingSongs = [
-    { title: "Trending Song 1", artist: "Artist 1", genre: "Genre 1", link: "/song1", related: ["Related Song 1A", "Related Song 1B"] },
-    { title: "Trending Song 2", artist: "Artist 2", genre: "Genre 2", link: "/song2", related: ["Related Song 2A", "Related Song 2B"] },
+    { title: "Trending Song 1", artist: "Artist 1", genre: "Genre 1", link: "/register", related: ["Related Song 1A", "Related Song 1B"] },
+    { title: "Trending Song 2", artist: "Artist 2", genre: "Genre 2", link: "/register", related: ["Related Song 2A", "Related Song 2B"] },
     // Add more trending songs here
-    { title: "Trending Song 1", artist: "Artist 1", genre: "Genre 1", link: "/song1", related: ["Related Song 1A", "Related Song 1B"] },
-    { title: "Trending Song 2", artist: "Artist 2", genre: "Genre 2", link: "/song2", related: ["Related Song 2A", "Related Song 2B"] },
+    { title: "Trending Song 1", artist: "Artist 1", genre: "Genre 1", link: "/register", related: ["Related Song 1A", "Related Song 1B"] },
+    { title: "Trending Song 2", artist: "Artist 2", genre: "Genre 2", link: "/register", related: ["Related Song 2A", "Related Song 2B"] },
     // Add more trending songs here
-    { title: "Trending Song 1", artist: "Artist 1", genre: "Genre 1", link: "/song1", related: ["Related Song 1A", "Related Song 1B"] },
-    { title: "Trending Song 2", artist: "Artist 2", genre: "Genre 2", link: "/song2", related: ["Related Song 2A", "Related Song 2B"] },
+    { title: "Trending Song 1", artist: "Artist 1", genre: "Genre 1", link: "/register", related: ["Related Song 1A", "Related Song 1B"] },
+    { title: "Trending Song 2", artist: "Artist 2", genre: "Genre 2", link: "/register", related: ["Related Song 2A", "Related Song 2B"] },
     // Add more trending songs here
-    { title: "Trending Song 1", artist: "Artist 1", genre: "Genre 1", link: "/song1", related: ["Related Song 1A", "Related Song 1B"] },
-    { title: "Trending Song 2", artist: "Artist 2", genre: "Genre 2", link: "/song2", related: ["Related Song 2A", "Related Song 2B"] },
+    { title: "Trending Song 1", artist: "Artist 1", genre: "Genre 1", link: "/register", related: ["Related Song 1A", "Related Song 1B"] },
+    { title: "Trending Song 2", artist: "Artist 2", genre: "Genre 2", link: "/register", related: ["Related Song 2A", "Related Song 2B"] },
     // Add more trending songs here
-    { title: "Trending Song 1", artist: "Artist 1", genre: "Genre 1", link: "/song1", related: ["Related Song 1A", "Related Song 1B"] },
+    { title: "Trending Song 1", artist: "Artist 1", genre: "Genre 1", link: "/register", related: ["Related Song 1A", "Related Song 1B"] },
     
   ];
 
@@ -29,6 +30,7 @@ const Trending = () => {
   };
 
   return (
+    <div className="flex flex-col h-screen">
     <div className="trending-page p-6 bg-gray-100 min-h-screen">
       <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Trending Songs</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -57,6 +59,7 @@ const Trending = () => {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 };
