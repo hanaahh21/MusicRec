@@ -28,8 +28,11 @@ class track(BaseModel):
 def uploadTrack():
     # Function to get similar tracks
     df = pd.read_csv("C:\\Users\\zayna\\Downloads\\Music Info.csv", encoding='utf-8')
+    # df1 = pd.read_csv("C:\\Users\\zayna\\Downloads\\User Listening History.csv", encoding='utf-8')
+    
     # Store the DataFrame in the PostgreSQL database
     df.to_sql('tracks', con=engine, if_exists='append', index=False)
+    # df1.to_sql('track_listening_history', con=engine, if_exists='append', index=False)
     
     return {"message": "Data uploaded successfully"}
 
@@ -144,11 +147,49 @@ def recommend_top_tracks(user_id: str, top_n: int = 10):
     # Get the top N tracks
     top_tracks = predictions[:top_n]
     
-    # Convert the top tracks to a JSON serializable format
     top_tracks_json = [{"track_id": track_id, "estimated_playcount": int(est)} for track_id, est in top_tracks]
+    detailed_tracks = []
     
-    return {"recommended_tracks": top_tracks_json}
+    for i in top_tracks_json:
+        track = db.query(trackmodel.track).filter(trackmodel.track.track_id == i['track_id']).first()
+        if track:
+            detailed_tracks.append({
+                "track_id": i['track_id'],
+                "track_name": track.name,
+                "artist": track.artist,
+                "genre": track.genre,
+                "estimated_playcount": i['estimated_playcount']
+            })
+    return {"recommended_tracks": detailed_tracks}
 
+
+@app.get('/populartracks/',status_code=status.HTTP_200_OK)
+def get_most_popular_songs(df, track_ids, n=10):
+    """
+    Returns the most popular 'n' songs from a given list of track_ids.
+    
+    Parameters:
+    - df (pd.DataFrame): DataFrame containing the song data with columns ['track_id', 'playcount'].
+    - track_ids (list): List of track_ids to consider.
+    - n (int): Number of top songs to return.
+    
+    Returns:
+    - pd.DataFrame: DataFrame containing the top 'n' most popular songs.
+    """
+    
+    # Filter DataFrame to include only the specified track_ids
+    filtered_df = df[df['track_id'].isin(track_ids)]
+    
+    # Aggregate playcounts for each track_id
+    aggregated_df = filtered_df.groupby('track_id')['playcount'].sum().reset_index()
+    
+    # Sort tracks by total playcount in descending order
+    sorted_df = aggregated_df.sort_values(by='playcount', ascending=False)
+    
+    # Get the top 'n' songs
+    top_songs = sorted_df["track_id"].head(n).tolist()
+    
+    return top_songs
 
 # @app.post("/predict")
 # async def predict(interaction: interactions):
