@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const LoginPage = () => {
+const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Define the state for isLoggedIn
 
   const navigate = useNavigate();
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,13 +17,13 @@ const LoginPage = () => {
     setSuccess('');
     try {
       const response = await axios.post('http://localhost:8000/login', {
-        username: username,
-        password: password,
+        username,
+        password,
       });
       console.log('User logged in:', response.data);
       setSuccess('Login successful!');
-      setIsLoggedIn(true); // Update the login state
-      navigate('/foryou'); // Redirect to home or dashboard page
+      onLogin(); // Call the function passed as a prop to set the login state in the App component
+      navigate('/foryou'); // Redirect to the "For You" page
     } catch (error) {
       console.error('Error logging in:', error.response.data);
       setError(error.response.data.detail);
