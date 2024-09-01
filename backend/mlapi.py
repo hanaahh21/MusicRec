@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, status, Depends
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from database import engine, get_db
+from database import engine, get_db, SessionLocal
 from sklearn.preprocessing import StandardScaler
 from typing import List
 import pickle, keras
@@ -13,7 +13,7 @@ import json
 
 
 app = FastAPI()
-
+db = SessionLocal()
 class interactions(BaseModel):
     user_id : int
     track_id : int
@@ -55,9 +55,19 @@ def get_similar_tracks_by_id(track_id : str, top_n: int = 10):
     track_features = X_test_scaled[track_index].reshape(1, -1)
     similarities = np.dot(X_test_scaled, track_features.T).flatten()
     similar_indices = np.argsort(similarities)[-top_n:]
-    similar_tracks = df.iloc[similar_indices]['track_id','name', 'artist','genre']
-    similar_tracks_list = similar_tracks.to_dict(orient='records')
-
+    similar_track_ids = df.iloc[similar_indices]['track_id'].tolist()
+    
+    similar_tracks_list = []
+    for similar_track_id in similar_track_ids:
+        track = db.query(trackmodel.track).filter(trackmodel.track.track_id == similar_track_id).first()
+        if track:
+            similar_tracks_list.append({
+                "track_id": track.track_id,
+                "track_name": track.name,
+                "artist": track.artist,
+                "genre": track.genre
+            })
+    
     return {"similar_tracks": similar_tracks_list}
 
 
@@ -113,31 +123,31 @@ def get_similar_tracks_by_id(track_id : str, top_n: int = 10):
 #     return top_songs
 
 
-# with open('final_user_based.pkl', 'rb') as listening_file:
-#     listening_model = pickle.load(listening_file)
+# Load your model and data
+with open('final_user_based.pkl', 'rb') as listening_file:
+    listening_model = pickle.load(listening_file)
     
-# listening_df = pd.read_csv('User Listening History.csv')
-    
-# aggregated_df = listening_df.groupby(['track_id', 'user_id'])['playcount'].sum().reset_index()
-# all_tracks = set(aggregated_df['track_id'].unique())
+listening_df = pd.read_csv('User Listening History.csv')
+aggregated_df = listening_df.groupby(['track_id', 'user_id'])['playcount'].sum().reset_index()
+all_tracks = set(aggregated_df['track_id'].unique())
 
-# @app.post("/recommend/{user_id}", status_code = status.HTTP_200_OK)
-# def recommend_top_tracks(user_id : str, top_n : int=10):
-
-#     predictions = []
-#     for track_id in all_tracks:
-#         prediction = listening_model.predict(user_id, track_id)
-#         predictions.append((track_id, prediction.est))
+@app.post("/recommend/{user_id}", status_code=status.HTTP_200_OK)
+def recommend_top_tracks(user_id: str, top_n: int = 10):
+    predictions = []
+    for track_id in all_tracks:
+        prediction = listening_model.predict(user_id, track_id)
+        predictions.append((track_id, prediction.est))
     
+    # Sort the predictions by estimated playcount in descending order
+    predictions.sort(key=lambda x: x[1], reverse=True)
     
-#     predictions.sort(key=lambda x: x[1], reverse=True)
-#     top_tracks = predictions[:top_n]
-#     top_tracks_json = [{"track_id": track_id, "estimated_playcount": est} for track_id, est in top_tracks]
+    # Get the top N tracks
+    top_tracks = predictions[:top_n]
     
-#     return {"recommended_tracks": top_tracks_json}
-
-# print(recommend_top_tracks(1, 10))
-
+    # Convert the top tracks to a JSON serializable format
+    top_tracks_json = [{"track_id": track_id, "estimated_playcount": int(est)} for track_id, est in top_tracks]
+    
+    return {"recommended_tracks": top_tracks_json}
 
 
 # @app.post("/predict")
