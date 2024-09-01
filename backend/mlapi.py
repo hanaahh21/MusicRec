@@ -3,12 +3,14 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from database import engine, get_db
 from sklearn.preprocessing import StandardScaler
+from typing import List
 import pickle, keras
 import pandas as pd
 import numpy as np
 import trackmodel as trackmodel
 import track_playcount as track_playcount
 import json
+
 
 app = FastAPI()
 
@@ -35,7 +37,7 @@ def uploadTrack():
 
 
 # get similar tracks
-with open('A:\\OneDrive - University of Moratuwa\\Projects\\MusicRec1\\backend\\model_for_similar_songs.pkl', 'rb') as file:
+with open('model_for_similar_songs.pkl', 'rb') as file:
     model = pickle.load(file)
 
 X_test_scaled = np.load('X_train_scaled.npy')
@@ -53,9 +55,10 @@ def get_similar_tracks_by_id(track_id : str, top_n: int = 10):
     track_features = X_test_scaled[track_index].reshape(1, -1)
     similarities = np.dot(X_test_scaled, track_features.T).flatten()
     similar_indices = np.argsort(similarities)[-top_n:]
-    similar_track_ids = df.iloc[similar_indices]['track_id'].tolist()
+    similar_tracks = df.iloc[similar_indices]['track_id','name', 'artist','genre']
+    similar_tracks_list = similar_tracks.to_dict(orient='records')
 
-    return {"similar_tracks": similar_track_ids}
+    return {"similar_tracks": similar_tracks_list}
 
 
 
@@ -63,22 +66,51 @@ def get_similar_tracks_by_id(track_id : str, top_n: int = 10):
 
 
 # get popular tracks
-@app.post("/playtrack/{track_id}")
-def play_track(track_id: str, db: Session = Depends(get_db)):
-    # Check if the track exists in the table
-    track_record = db.query(track_playcount.trackcount).filter(track_playcount.trackcount.track_id == track_id).first()
+# @app.post("/playtrack/{track_id}")
+# def play_track(track_id: str, db: Session = Depends(get_db)):
+#     # Check if the track exists in the table
+#     track_record = db.query(track_playcount.trackcount).filter(track_playcount.trackcount.track_id == track_id).first()
     
-    if track_record:
-        # If the track exists, increment the playcount
-        track_record.playcount += 1
-    else:
-        # If the track does not exist, add it with a playcount of 1
-        new_track = track_playcount.trackcount(track_id=track_id, playcount=1)
-        db.add(new_track)
+#     if track_record:
+#         # If the track exists, increment the playcount
+#         track_record.playcount += 1
+#     else:
+#         # If the track does not exist, add it with a playcount of 1
+#         new_track = track_playcount.trackcount(track_id=track_id, playcount=1)
+#         db.add(new_track)
     
-    db.commit()
+#     db.commit()
     
-    return {"message": f"Track {track_id} playcount incremented."}
+#     return {"message": f"Track {track_id} playcount incremented."}
+
+
+
+
+# Assuming trackmodel and track_playcount are correctly defined and imported
+
+# @app.get("/popular_songs/")
+# def popular_songs(n: int = 10, db: Session = Depends(get_db)):
+#     results = (
+#         db.query(trackmodel.track, track_playcount.trackcount)
+#         .join(track_playcount.trackcount, trackmodel.track.track_id == track_playcount.trackcount.track_id)
+#         .order_by(track_playcount.trackcount.playcount.desc())
+#         .limit(n)
+#         .all()
+#     )
+    
+#     # Format results
+#     top_songs = [
+#         {
+#             "track_id": track.track_id,
+#             "track_name": track.name,
+#             "artist": track.artist,
+#             "genre": track.genre,
+#             "playcount": playcount.playcount
+#         }
+#         for track, playcount in results
+#     ]
+    
+#     return top_songs
 
 
 # with open('final_user_based.pkl', 'rb') as listening_file:

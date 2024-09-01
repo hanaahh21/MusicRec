@@ -36,6 +36,8 @@ class User(BaseModel):
     email : EmailStr
     password : str
     
+
+    
 @app.get("/", response_model=list[User], status_code=status.HTTP_200_OK)
 def getAll_Users():
     return db.query(usermodel.User).all()
