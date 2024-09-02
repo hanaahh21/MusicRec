@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaUserCircle, FaCog, FaMoon, FaSun, FaSignOutAlt } from 'react-icons/fa';
+import { FaUserCircle, FaCog, FaMoon, FaSun, FaSignOutAlt, FaHome } from 'react-icons/fa';
 
 const Sidebar = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -18,7 +18,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`w-64 h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-800 text-white'}`}>
+    <div className={`w-64 h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-500 text-white'}`}>
       <div className="p-4">
         {/* User Profile Section */}
         <div className="flex items-center mb-6">
@@ -32,6 +32,12 @@ const Sidebar = () => {
         {/* Navigation Links */}
         <nav>
           <ul>
+          <li>
+              <Link to="/foryou" className="flex items-center p-3 hover:bg-gray-700">
+                <FaHome size={20} className="mr-3" />
+                Home
+              </Link>
+            </li>
             <li>
               <Link to="/profile" className="flex items-center p-3 hover:bg-gray-700">
                 <FaUserCircle size={20} className="mr-3" />

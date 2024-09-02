@@ -34,7 +34,7 @@ const App = () => {
               <Route path="/login" element={<Loginpage onLogin={handleLogin} />} />
               <Route path="/register" element={<RegisterPage />} />
 
-              /* {isLoggedIn ? (
+            {  /* {isLoggedIn ? (
                 <>
                   <Route path="/foryou" element={<Foryou />} />
                   <Route path="/chatbot" element={<Chatbot />} />
@@ -44,8 +44,11 @@ const App = () => {
                   <Route path="/foryou" element={<Foryou />} />
                   <Route path="/chatbot" element={<Chatbot />} />
                   <Route path="/profile" element={<Profile />} />
+                  
+                  <Route path="/preferences" element={<Preferences />} />
+
                 </>
-              )} */
+              )} */}
             </Routes>
           </div>
         </div>
