@@ -43,12 +43,19 @@ def getAll_Users():
     return db.query(usermodel.User).all()
 
 
+@app.get("/user/{ID}", response_model=User, status_code=status.HTTP_200_OK)
+def get_user_by_username(ID: int, db: Session = Depends(get_db)):
+    find_user = db.query(usermodel.User).filter(usermodel.User.id == ID).first()
+    if find_user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    return find_user
 
 
 # email error should be done
 @app.post("/register", response_model=User, status_code=status.HTTP_201_CREATED)
 def Register(user: User):
     newUser = usermodel.User(
+                          userid = user.id,
                           firstname=user.firstname,
                           lastname = user.lastname, 
                           gender = user.gender,
@@ -111,23 +118,3 @@ def deleteUser(id:int):
 
 
 
-# @app.get("/", status_code=200)
-# def getUser_Info():
-#     return {"message" : "server is running"}
-
-# print("Server is running")
-
-# @app.get('/getuserbyid/{id}', status_code=200)
-# def getUserById(id : int):
-#     return {"message" : f"Your user Id is {id}"}
-
-# @app.post('/adduser', status_code=200)
-# def addUser(user : User):
-#     return {
-#             "firstname" : user.firstname,
-#             "lastname" : user.lastname,
-#             "gender" : user.gender,
-#             "username" : user.username,
-#             "email" : user.email,
-#             "password" : user.password
-#             }

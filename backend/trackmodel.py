@@ -10,7 +10,7 @@ class track(Base):
     spotify_preview_url = Column(String, nullable = False)
     spotify_id = Column(String, unique=True, index=True)
     tags = Column(ARRAY(String), nullable = False)
-    genre = Column(ARRAY(String), nullable = False)     #change this and reload
+    genre = Column(String, nullable = False)     
     year = Column(String, nullable = False)
     duration_ms = Column(Integer, nullable = False)
     danceability = Column(Float, nullable = False)

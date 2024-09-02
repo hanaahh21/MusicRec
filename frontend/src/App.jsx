@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
-import Foryou from './components/foryou';
-import Trending from './components/Trending';
-import Chatbot from './components/Chatbot';
-import LoginPage from './components/Loginpage';
+
+import Foryou from './components/Foryou'
+import Trending from './components/Trending'
+import Chatbot from './components/Chatbot'
+import Loginpage from './components/Loginpage'
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import RegisterPage from './components/Registerpage';
 import Profile from './components/Profile';
+import Preferences from './components/Preferences';
+import Song from './components/Song';
+//import Trending2 from './components/Trending2';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,27 +34,32 @@ const App = () => {
           <div className="content-area flex-1">
             <Routes>
               <Route path="/" element={<Trending />} />
-              <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+              <Route path="/login" element={<Loginpage onLogin={handleLogin} />} />
               <Route path="/register" element={<RegisterPage />} />
+
               {isLoggedIn ? (
                 <>
                   <Route path="/foryou" element={<Foryou />} />
                   <Route path="/chatbot" element={<Chatbot />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/preferences" element={<Preferences />} />
+                  <Route path="/song" element={<Song />} />
                 </>
               ) : (
                 <>
                   <Route path="/foryou" element={<Navigate to="/login" />} />
                   <Route path="/chatbot" element={<Navigate to="/login" />} />
                   <Route path="/profile" element={<Navigate to="/login" />} />
+                  <Route path="/preferences" element={<Navigate to="/login" />} />
+                  <Route path="/song" element={<Song />} />
                 </>
               )}
             </Routes>
           </div>
         </div>
       </div>
-    
-  );
-};
+      
+                
+              )}
 
-export default App;
+export default App

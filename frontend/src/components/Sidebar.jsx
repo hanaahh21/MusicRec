@@ -1,9 +1,35 @@
-import React, { useState } from 'react';
+import  { useState , useEffect} from 'react';
 import { Link } from 'react-router-dom';
-import { FaUserCircle, FaCog, FaMoon, FaSun, FaSignOutAlt } from 'react-icons/fa';
+import { FaUserCircle, FaCog, FaMoon, FaSun, FaSignOutAlt, FaHome } from 'react-icons/fa';
+import axios from 'axios';
 
 const Sidebar = () => {
+  const user_id = localStorage.getItem('userID'); // Retrieve username
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [userData, setUserData] = useState({
+    username: '',
+    email: '',
+  });
+  useEffect(() => {
+    if (user_id) {
+      // Fetch user details from the backend
+      axios.get(`http://localhost:8000/user/${user_id}`)
+        .then(response => {
+          const data = response.data;
+          localStorage.setItem('user_name', data.username)
+          setUserData({
+            username: data.username,
+            email: data.email,
+          });
+        }
+)
+        .catch(error => {
+          console.error('Error fetching user details:', error);
+        });
+    }
+
+  }, [user_id]);
+
 
   // Toggle dark mode
   const handleDarkModeToggle = () => {
@@ -18,20 +44,27 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`w-64 h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-800 text-white'}`}>
+    // check full screen
+    <div className={`flex flex-col w-64 min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-500 text-white'}`}>  
       <div className="p-4">
         {/* User Profile Section */}
         <div className="flex items-center mb-6">
           <FaUserCircle size={50} className="mr-3" />
           <div>
-            <p className="text-lg font-bold">User Name</p>
-            <p className="text-sm text-gray-400">user@example.com</p>
+            <p className="text-lg font-bold">{userData.username}</p>
+            <p className="text-sm text-gray-400">{userData.email}</p>
           </div>
         </div>
 
         {/* Navigation Links */}
         <nav>
           <ul>
+          <li>
+              <Link to="/foryou" className="flex items-center p-3 hover:bg-gray-700">
+                <FaHome size={20} className="mr-3" />
+                Home
+              </Link>
+            </li>
             <li>
               <Link to="/profile" className="flex items-center p-3 hover:bg-gray-700">
                 <FaUserCircle size={20} className="mr-3" />

@@ -1,11 +1,9 @@
-import React,{useState} from 'react'
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoginPage from './Loginpage';
-import RegisterPage from './Registerpage';
-
-
 
 const Topbar = ({ isLoggedIn, handleLogout }) => {
+  const [searchType, setSearchType] = useState(''); // To store the selected search type
+  const [query, setQuery] = useState(''); // To store the user input
   const navigate = useNavigate();
 
   const handleProfile = () => {
@@ -20,19 +18,57 @@ const Topbar = ({ isLoggedIn, handleLogout }) => {
     navigate('/register'); // Navigate to Signup page
   };
 
-  return (
-    <div className="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
-      {/* Logo or Brand Name */}
-      <div className="text-xl font-bold">MusicHub</div>
 
-      {/* Search Bar */}
-      <div className="flex items-center space-x-2 w-1/2">
+  // Handle dropdown selection change
+  const handleSearchTypeChange = (e) => {
+    setSearchType(e.target.value);
+    setQuery(''); // Reset query when changing search type
+  };
+
+  // Handle search input change
+  const handleQueryChange = (e) => {
+    setQuery(e.target.value);
+  };
+
+  // Handle the search action
+  const handleSearch = () => {
+    if (searchType && query) {
+      navigate(`/recommendations?${searchType}=${query}`); // Redirect to recommendations based on selection
+    }
+  };
+
+  return (
+    <div className="topbar flex items-center justify-between p-4 bg-blue-600 text-white">
+      <div className="text-xl font-bold">Music Hub</div>
+
+      {/* Dropdown Search */}
+      <div className="flex items-center space-x-2">
+        <select
+          value={searchType}
+          onChange={handleSearchTypeChange}
+          className="p-2 rounded bg-white text-black"
+        >
+          <option value="" disabled>Select Category</option>
+          <option value="song">Song Name</option>
+          <option value="artist">Artist</option>
+          <option value="genre">Genre</option>
+          <option value="tag">Tag</option>
+        </select>
+
         <input
           type="text"
-          placeholder="Search for music..."
-          className="w-full px-4 py-2 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder={`Search by ${searchType || '...'}`}
+          value={query}
+          onChange={handleQueryChange}
+          className="p-2 rounded"
+          disabled={!searchType}
         />
-        <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">
+
+        <button
+          onClick={handleSearch}
+          className="bg-green-500 hover:bg-green-600 text-white p-2 rounded"
+          disabled={!query}
+        >
           Search
         </button>
       </div>
@@ -69,10 +105,11 @@ const Topbar = ({ isLoggedIn, handleLogout }) => {
               Signup
             </button>
           </>
-        )}
-        </div>
+
+      )}
+    </div>
     </div>
   );
 };
 
-export default Topbar
+export default Topbar;

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+// import { useAuth } from '../context/AuthProvider'; // Adjust the import path
+
 
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -10,6 +12,7 @@ const LoginPage = ({ onLogin }) => {
   const [success, setSuccess] = useState('');
 
   const navigate = useNavigate();
+  // const { setUser } = useAuth(); // Use context to set user
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,6 +25,8 @@ const LoginPage = ({ onLogin }) => {
       });
       console.log('User logged in:', response.data);
       setSuccess('Login successful!');
+      localStorage.setItem('userID', response.data.id); // Store username
+      localStorage.setItem('isNewUser', 'false'); // Store token in local storage
       onLogin(); // Call the function passed as a prop to set the login state in the App component
       navigate('/foryou'); // Redirect to the "For You" page
     } catch (error) {

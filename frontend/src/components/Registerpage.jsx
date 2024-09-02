@@ -54,7 +54,9 @@ const RegisterPage = () => {
       });
       console.log('User registered:', response.data);
       setSuccess('Registration successful! Login to enjoy!'); // Set success message
-      
+      localStorage.setItem('user_name', response.data.username); // Store username in local storage
+      localStorage.setItem('userID', response.data.id); // Store user ID in local storage
+      localStorage.setItem('isNewUser', 'true'); // Store token in local storage
     } catch (error) {
       console.error('Error registering:', error.response.data);
       setError(error.response.data.detail);

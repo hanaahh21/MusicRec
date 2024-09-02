@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, status, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
+from pydantic import BaseModel , Field
 from database import engine, get_db, SessionLocal
 from sklearn.preprocessing import StandardScaler
 from typing import List
@@ -12,16 +13,31 @@ import track_playcount as track_playcount
 import json
 
 
+
 app = FastAPI()
 db = SessionLocal()
-class interactions(BaseModel):
-    user_id : int
-    track_id : int
-    interaction_count : int
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Replace "*" with the actual URL of your frontend, e.g., ["http://localhost:3000"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+    
+class TrackInfo(BaseModel):
+    artist_name: List[str] = Field(..., min_items=1, max_items=3)
+    genre_name: List[str] = Field(..., min_items=1, max_items=3)
     
 class track(BaseModel):
     track_id : str
     
+
+
+
 # upload music_info
 
 @app.post("/uploadtrack", status_code=200)
@@ -136,6 +152,7 @@ all_tracks = set(aggregated_df['track_id'].unique())
 
 @app.post("/recommend/{user_id}", status_code=status.HTTP_200_OK)
 def recommend_top_tracks(user_id: str, top_n: int = 10):
+    # row_count = aggregated_df[aggregated_df['user_id'] == user_id].shape[0]
     predictions = []
     for track_id in all_tracks:
         prediction = listening_model.predict(user_id, track_id)
@@ -164,21 +181,9 @@ def recommend_top_tracks(user_id: str, top_n: int = 10):
 
 
 @app.get('/populartracks/',status_code=status.HTTP_200_OK)
-def get_most_popular_songs(df, track_ids, n=10):
-    """
-    Returns the most popular 'n' songs from a given list of track_ids.
-    
-    Parameters:
-    - df (pd.DataFrame): DataFrame containing the song data with columns ['track_id', 'playcount'].
-    - track_ids (list): List of track_ids to consider.
-    - n (int): Number of top songs to return.
-    
-    Returns:
-    - pd.DataFrame: DataFrame containing the top 'n' most popular songs.
-    """
-    
+def get_most_popular_songs(n=10):
     # Filter DataFrame to include only the specified track_ids
-    filtered_df = df[df['track_id'].isin(track_ids)]
+    filtered_df = listening_df[listening_df['track_id'].isin(all_tracks)]
     
     # Aggregate playcounts for each track_id
     aggregated_df = filtered_df.groupby('track_id')['playcount'].sum().reset_index()
@@ -188,14 +193,146 @@ def get_most_popular_songs(df, track_ids, n=10):
     
     # Get the top 'n' songs
     top_songs = sorted_df["track_id"].head(n).tolist()
+    top_songs_list = []
+    for id in top_songs:
+        track = db.query(trackmodel.track).filter(trackmodel.track.track_id == id).first()
+        if track:
+            top_songs_list.append({
+                "track_id": track.track_id,
+                "track_name": track.name,
+                "artist": track.artist,
+                "genre": track.genre})
     
-    return top_songs
+    return top_songs_list
 
-# @app.post("/predict")
-# async def predict(interaction: interactions):
-#     data = pd.DataFrame([interaction.dict().values()], columns=interaction.dict().keys())
-#     prediction = model.predict(data)
-#     return {
-#         'prediction': prediction
-#     }
+
+
+@app.post('/trackinfo_name/{trackname}', status_code=status.HTTP_200_OK)
+def get_song_info_track(trackname):
+    track = db.query(trackmodel.track).filter(trackmodel.track.name == trackname).first()
+    detailed_tracks =[]
+    if track:
+        detailed_tracks.append({
+            "track_id": track.track_id,
+            "track_name": track.name,
+            "artist": track.artist,
+            "genre": track.genre,
+        })
+    else:
+        raise HTTPException(status_code=404, detail="Track not found")
+
+    return {"track_info": detailed_tracks}
+
+
+
+@app.post('/trackinfo_artist/{artist_name}', status_code=status.HTTP_200_OK)
+def get_song_info_artist(artist_name):
+    track = db.query(trackmodel.track).filter(trackmodel.track.artist == artist_name).first()
+    detailed_tracks =[]
+    if track:
+        detailed_tracks.append({
+            "track_id": track.track_id,
+            "track_name": track.name,
+            "artist": track.artist,
+            "genre": track.genre,
+        })
+    else:
+        raise HTTPException(status_code=404, detail="Artist not found")
+
+    return {"track_info": detailed_tracks}
+
+
+
+@app.post('/trackinfo_tag/{tag}', status_code=status.HTTP_200_OK)
+def get_song_info_tag(tag):
+    track = db.query(trackmodel.track).filter(tag in trackmodel.track.tags).first()
+    detailed_tracks =[]
+    if track:
+        detailed_tracks.append({
+            "track_id": track.track_id,
+            "track_name": track.name,
+            "artist": track.artist,
+            "genre": track.genre,
+        })
+    else:
+        raise HTTPException(status_code=404, detail="Tag not found")
+
+    return {"track_info": detailed_tracks}
+
+
+
+@app.post('/trackinfo_genre/{genre_name}', status_code=status.HTTP_200_OK)
+def get_song_info_genre(genre_name):
+    track = db.query(trackmodel.track).filter(trackmodel.track.genre == genre_name).first()
+    detailed_tracks =[]
+    if track:
+        detailed_tracks.append({
+            "track_id": track.track_id,
+            "track_name": track.name,
+            "artist": track.artist,
+            "genre": track.genre,
+        })
+    else:
+        raise HTTPException(status_code=404, detail="Genre not found")
+
+    return {"track_info": detailed_tracks}
+
+
+
+@app.post('/trackinfo/', status_code=status.HTTP_200_OK)
+def get_song_info(track_info: TrackInfo):
+    detailed_tracks = []
+
+    # Determine the number of tracks to select based on the number of artists
+    artist_track_counts = []
+    if len(track_info.artist_name) == 1:
+        artist_track_counts = [5]
+    elif len(track_info.artist_name) == 2:
+        artist_track_counts = [3, 2]
+    elif len(track_info.artist_name) == 3:
+        artist_track_counts = [2, 2, 1]
+
+    # Iterate over each artist in the list and select the specified number of tracks
+    for i, artist_nm in enumerate(track_info.artist_name):
+        if i < len(artist_track_counts):
+            track_count = artist_track_counts[i]
+            tracks = db.query(trackmodel.track).filter(trackmodel.track.artist == artist_nm).limit(track_count).all()
+            if tracks:
+                for track in tracks:
+                    detailed_tracks.append({
+                        "track_id": track.track_id,
+                        "track_name": track.name,
+                        "artist": track.artist,
+                        "genre": track.genre,
+                    })
+            else:
+                raise HTTPException(status_code=404, detail=f"Artist '{artist_nm}' not found")
+
+    # Determine the number of tracks to select based on the number of genres
+    genre_track_counts = []
+    if len(track_info.genre_name) == 1:
+        genre_track_counts = [5]
+    elif len(track_info.genre_name) == 2:
+        genre_track_counts = [3, 2]
+    elif len(track_info.genre_name) == 3:
+        genre_track_counts = [2, 2, 1]
+
+    # Iterate over each genre in the list and select the specified number of tracks
+    for i, tag in enumerate(track_info.genre_name):
+        if i < len(genre_track_counts):
+            track_count = genre_track_counts[i]
+            tracks = db.query(trackmodel.track).filter(trackmodel.track.genre==tag).limit(track_count).all()
+            if tracks:
+                for track in tracks:
+                    detailed_tracks.append({
+                        "track_id": track.track_id,
+                        "track_name": track.name,
+                        "artist": track.artist,
+                        "genre": track.genre,
+                    })
+            else:
+                raise HTTPException(status_code=404, detail=f"Genre '{tag}' not found")
+
+    return {"track_info": detailed_tracks}
+
     
