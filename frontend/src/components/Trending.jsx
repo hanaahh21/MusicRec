@@ -10,7 +10,7 @@ const Trending = () => {
 
   useEffect(() => {
     // Fetch trending songs from backend
-    axios.get('http://localhost:8001/populartracks')  // Update with your actual URL
+    axios.get('http://sessionhost:8001/populartracks')  // Update with your actual URL
       .then(response => {
         setTrendingSongs(response.data);
       })
@@ -25,7 +25,7 @@ const Trending = () => {
     } else {
       // Fetch similar tracks if not already fetched
       if (!similarTracks[trackId]) {
-        axios.post(`http://localhost:8001/getsimilartrack/${trackId}`, { top_n: 2 })  // Update with your actual URL
+        axios.post(`http://sessionhost:8001/getsimilartrack/${trackId}`, { top_n: 2 })  // Update with your actual URL
           .then(response => {
             setSimilarTracks(prev => ({ ...prev, [trackId]: response.data.similar_tracks }));
           })
@@ -38,7 +38,7 @@ const Trending = () => {
   };
 
   const handleSongClick = (trackId) => {
-    const isLoggedIn = localStorage.getItem('userID'); // Check if the user is logged in
+    const isLoggedIn = sessionStorage.getItem('userID'); // Check if the user is logged in
     if (isLoggedIn) {
       navigate(`/song/${trackId}`); // Redirect to the song page
     } else {
@@ -47,7 +47,7 @@ const Trending = () => {
   };
 
   const handleRelatedSongClick = (trackId) => {
-    const isLoggedIn = localStorage.getItem('userID'); // Check if the user is logged in
+    const isLoggedIn = sessionStorage.getItem('userID'); // Check if the user is logged in
     if (isLoggedIn) {
       navigate(`/song/${trackId}`); // Redirect to the song detail page
     } else {

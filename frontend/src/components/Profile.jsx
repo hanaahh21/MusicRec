@@ -74,7 +74,7 @@
 // import axios from 'axios';
 
 // const Profile = () => {
-//   const user_name = localStorage.getItem('username');
+//   const user_name = sessionStorage.getItem('username');
 //   console.log(user_name);
 //   const [isEditing, setIsEditing] = useState(false);
 //   const [profile, setProfile] = useState({
@@ -85,7 +85,7 @@
 //   useEffect(() => {
 //   if (user_name) { // Ensure username is available
 //     // Fetch user details based on logged-in username
-//     axios.get(`http://localhost:8000/user/${user_name}`)
+//     axios.get(`http://sessionhost:8000/user/${user_name}`)
 //       .then(response => { 
 //         const userData = response.data;
 //         setProfile({
@@ -163,7 +163,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Profile = () => {
-  const user_id = localStorage.getItem('userID'); // Retrieve username
+  const user_id = sessionStorage.getItem('userID'); // Retrieve username
   console.log('Retrieved username:', user_id); // Log username for debugging
 
   const [isEditing, setIsEditing] = useState(false);
@@ -176,7 +176,7 @@ const Profile = () => {
   useEffect(() => {
     if (user_id) { // Ensure username is available
       // Fetch user details based on logged-in username
-      axios.get(`http://localhost:8000/user/${user_id}`)
+      axios.get(`http://sessionhost:8000/user/${user_id}`)
         .then(response => { 
           const userData = response.data;
           setProfile({

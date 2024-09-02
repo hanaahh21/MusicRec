@@ -8,18 +8,18 @@ const Recommended = () => {
   const [similarTracks, setSimilarTracks] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const user_name = localStorage.getItem('user_name');
+  const user_name = sessionStorage.getItem('user_name');
   
   // const location = useLocation();
   // const searchParams = new URLSearchParams(location.search);
   // const searchType = searchParams.keys().next().value; // Get the search type (song, artist, etc.)
   // const query = searchParams.get(searchType); // Get the user query
-  const userId = localStorage.getItem('userID'); // Retrieve user ID from local storage
+  const userId = sessionStorage.getItem('userID'); // Retrieve user ID from session storage
 
   useEffect(() => {
     if (userId) {
       // Fetch recommended songs based on user ID
-      axios.post(`http://localhost:8001/recommend/b80344d063b5ccb3212f76538f3d9e43d87dca9e`, { top_n: 10 }) // Update with your actual URL
+      axios.post(`http://sessionhost:8001/recommend/b80344d063b5ccb3212f76538f3d9e43d87dca9e`, { top_n: 10 }) // Update with your actual URL
         .then(response => {
           setRecommendedSongs(response.data.recommended_tracks);
           setLoading(false);
@@ -30,7 +30,7 @@ const Recommended = () => {
           setLoading(false);
         });
     } else {
-      setError('User ID not found in local storage.');
+      setError('User ID not found in session storage.');
       setLoading(false);
     }
   }, [userId]);
@@ -41,7 +41,7 @@ const Recommended = () => {
     } else {
       // Fetch similar tracks if not already fetched
       if (!similarTracks[trackId]) {
-        axios.post(`http://localhost:8001/getsimilartrack/${trackId}`, { top_n: 2 })  // Update with your actual URL
+        axios.post(`http://sessionhost:8001/getsimilartrack/${trackId}`, { top_n: 2 })  // Update with your actual URL
           .then(response => {
             setSimilarTracks(prev => ({ ...prev, [trackId]: response.data.similar_tracks }));
           })

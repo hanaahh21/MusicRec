@@ -19,14 +19,14 @@ const LoginPage = ({ onLogin }) => {
     setError('');
     setSuccess('');
     try {
-      const response = await axios.post('http://localhost:8000/login', {
+      const response = await axios.post('http://sessionhost:8000/login', {
         username,
         password,
       });
       console.log('User logged in:', response.data);
       setSuccess('Login successful!');
-      localStorage.setItem('userID', response.data.id); // Store username
-      localStorage.setItem('isNewUser', 'false'); // Store token in local storage
+      sessionStorage.setItem('userID', response.data.id); // Store username
+      sessionStorage.setItem('isNewUser', 'false'); // Store token in session storage
       onLogin(); // Call the function passed as a prop to set the login state in the App component
       navigate('/foryou'); // Redirect to the "For You" page
     } catch (error) {

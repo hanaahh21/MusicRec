@@ -4,7 +4,7 @@ import { FaUserCircle, FaCog, FaMoon, FaSun, FaSignOutAlt, FaHome } from 'react-
 import axios from 'axios';
 
 const Sidebar = () => {
-  const user_id = localStorage.getItem('userID'); // Retrieve username
+  const user_id = sessionStorage.getItem('userID'); // Retrieve username
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [userData, setUserData] = useState({
     username: '',
@@ -13,10 +13,10 @@ const Sidebar = () => {
   useEffect(() => {
     if (user_id) {
       // Fetch user details from the backend
-      axios.get(`http://localhost:8000/user/${user_id}`)
+      axios.get(`http://sessionhost:8000/user/${user_id}`)
         .then(response => {
           const data = response.data;
-          localStorage.setItem('user_name', data.username)
+          sessionStorage.setItem('user_name', data.username)
           setUserData({
             username: data.username,
             email: data.email,

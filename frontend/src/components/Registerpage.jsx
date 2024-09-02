@@ -44,7 +44,7 @@ const RegisterPage = () => {
     }
     
     try {
-      const response = await axios.post('http://localhost:8000/register', {
+      const response = await axios.post('http://sessionhost:8000/register', {
         firstname : firstname,
         lastname : lastname,
         gender : gender,
@@ -54,9 +54,9 @@ const RegisterPage = () => {
       });
       console.log('User registered:', response.data);
       setSuccess('Registration successful! Login to enjoy!'); // Set success message
-      localStorage.setItem('user_name', response.data.username); // Store username in local storage
-      localStorage.setItem('userID', response.data.id); // Store user ID in local storage
-      localStorage.setItem('isNewUser', 'true'); // Store token in local storage
+      sessionStorage.setItem('user_name', response.data.username); // Store username in session storage
+      sessionStorage.setItem('userID', response.data.id); // Store user ID in session storage
+      sessionStorage.setItem('isNewUser', 'true'); // Store token in session storage
     } catch (error) {
       console.error('Error registering:', error.response.data);
       setError(error.response.data.detail);
