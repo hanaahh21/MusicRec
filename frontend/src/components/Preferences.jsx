@@ -6,10 +6,17 @@ const Preferences = () => {
   const [selectedGenres, setSelectedGenres] = useState([]);
   const navigate = useNavigate();
 
-  const artistOptions = ['Artist A', 'Artist B', 'Artist C', 'Artist D'];
-  const genreOptions = ['Pop', 'Rock', 'Jazz', 'Hip-Hop'];
+  const artistOptions = [
+    'Kings of Leon', 'The Black Keys', 'Justin Bieber', 'Coldplay', 'Radiohead', 
+    'Jack Johnson', 'Modest Mouse', 'Metallica', 'John Mayer', 'Metric'
+  ];
+  
+  const genreOptions = [
+    'RnB', 'Rock', 'Pop', 'Metal', 'Electronic', 'Jazz', 'Punk', 'Country', 
+    'Folk', 'Reggae', 'Rap', 'Blues', 'New Age', 'Latin', 'World'
+  ];
 
-  const handleArtistChange = (event) => {
+  const handleSelectionChange = (event, setSelected, type) => {
     const { options } = event.target;
     const selected = [];
     for (let i = 0; i < options.length; i++) {
@@ -18,24 +25,9 @@ const Preferences = () => {
       }
     }
     if (selected.length <= 3) {
-      setSelectedArtists(selected);
+      setSelected(selected);
     } else {
-      alert('Please select up to 3 artists.');
-    }
-  };
-
-  const handleGenreChange = (event) => {
-    const { options } = event.target;
-    const selected = [];
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].selected) {
-        selected.push(options[i].value);
-      }
-    }
-    if (selected.length <= 3) {
-      setSelectedGenres(selected);
-    } else {
-      alert('Please select up to 3 genres.');
+      alert(`Please select up to 3 ${type}.`);
     }
   };
 
@@ -46,12 +38,12 @@ const Preferences = () => {
       return;
     }
 
-    // Handle the collected data (e.g., send to backend, update state, etc.)
-    console.log('Selected Artists:', selectedArtists);
-    console.log('Selected Genres:', selectedGenres);
+    // Save preferences to sessionStorage or pass it as needed
+    sessionStorage.setItem('selectedArtists', JSON.stringify(selectedArtists));
+    sessionStorage.setItem('selectedGenres', JSON.stringify(selectedGenres));
 
-    // Redirect user after submitting
-    navigate('/foryou'); // Redirect to the desired page after form submission
+    // Redirect to the "For You" page
+    navigate('/foryou', { state: { selectedArtists, selectedGenres } });
   };
 
   return (
@@ -67,7 +59,7 @@ const Preferences = () => {
           <select
             multiple
             value={selectedArtists}
-            onChange={handleArtistChange}
+            onChange={(e) => handleSelectionChange(e, setSelectedArtists, 'artists')}
             className="w-full p-2 border border-gray-300 rounded"
           >
             {artistOptions.map((artist) => (
@@ -86,7 +78,7 @@ const Preferences = () => {
           <select
             multiple
             value={selectedGenres}
-            onChange={handleGenreChange}
+            onChange={(e) => handleSelectionChange(e, setSelectedGenres, 'genres')}
             className="w-full p-2 border border-gray-300 rounded"
           >
             {genreOptions.map((genre) => (

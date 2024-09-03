@@ -43,7 +43,7 @@ const App = () => {
                   <Route path="/foryou" element={<Foryou />} />
                   <Route path="/chatbot" element={<Chatbot />} />
                   <Route path="/profile" element={<Profile />} />
-                  {/* <Route path="/preferences" element={<Preferences />} /> */}
+                  <Route path="/preferences" element={<Preferences />} />
                   <Route path="/song/:trackId" element={<Song />} />
                   <Route path="/recommendations" element={<Recommendations />} />
                 </>
@@ -52,7 +52,7 @@ const App = () => {
                   <Route path="/foryou" element={<Navigate to="/login" />} />
                   <Route path="/chatbot" element={<Navigate to="/login" />} />
                   <Route path="/profile" element={<Navigate to="/login" />} />
-                  {/* <Route path="/preferences" element={<Navigate to="/login" />} /> */}
+                  <Route path="/preferences" element={<Navigate to="/login" />} />
                   <Route path="/song/:trackId" element={<Navigate to="/login" />} />
                   <Route path="/recommendations" element={<Navigate to="/login" />} />
                 </>

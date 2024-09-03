@@ -10,6 +10,7 @@ const LoginPage = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const registered = sessionStorage.getItem('isRegistered');
 
   const navigate = useNavigate();
   // const { setUser } = useAuth(); // Use context to set user
@@ -28,7 +29,12 @@ const LoginPage = ({ onLogin }) => {
       sessionStorage.setItem('userID', response.data.id); // Store username
       sessionStorage.setItem('isNewUser', 'false'); // Store token in session storage
       onLogin(); // Call the function passed as a prop to set the login state in the App component
+      if (registered === 'true') {
+        navigate('/preferences');
+      }
+      else{
       navigate('/foryou'); // Redirect to the "For You" page
+    }
     } catch (error) {
       console.error('Error logging in:', error.response.data);
       setError(error.response.data.detail);
