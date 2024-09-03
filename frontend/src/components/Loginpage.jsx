@@ -19,7 +19,7 @@ const LoginPage = ({ onLogin }) => {
     setError('');
     setSuccess('');
     try {
-      const response = await axios.post('http://sessionhost:8000/login', {
+      const response = await axios.post('http://localhost:8000/login', {
         username,
         password,
       });

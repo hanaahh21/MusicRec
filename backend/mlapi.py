@@ -223,11 +223,9 @@ def get_song_info_track(trackname):
 
     return {"track_info": detailed_tracks}
 
-
-
-@app.post('/trackinfo_artist/{artist_name}', status_code=status.HTTP_200_OK)
-def get_song_info_artist(artist_name):
-    track = db.query(trackmodel.track).filter(trackmodel.track.artist == artist_name).first()
+@app.post('/trackinfo_id/{id}', status_code=status.HTTP_200_OK)
+def get_song_info_track(id):
+    track = db.query(trackmodel.track).filter(trackmodel.track.track_id == id).first()
     detailed_tracks =[]
     if track:
         detailed_tracks.append({
@@ -235,7 +233,29 @@ def get_song_info_artist(artist_name):
             "track_name": track.name,
             "artist": track.artist,
             "genre": track.genre,
+            "year": track.year,
+            "link": track.spotify_preview_url,
+            "tags" : track.tags,
         })
+    else:
+        raise HTTPException(status_code=404, detail="Track not found")
+
+    return {"track_info": detailed_tracks}
+
+
+
+@app.post('/trackinfo_artist/{artist_name}', status_code=status.HTTP_200_OK)
+def get_song_info_artist(artist_name):
+    tracks = db.query(trackmodel.track).filter(trackmodel.track.artist == artist_name).limit(12).all()
+    detailed_tracks =[]
+    if tracks:
+        for track in tracks:
+            detailed_tracks.append({
+                "track_id": track.track_id,
+                "track_name": track.name,
+                "artist": track.artist,
+                "genre": track.genre,
+            })
     else:
         raise HTTPException(status_code=404, detail="Artist not found")
 
@@ -245,15 +265,16 @@ def get_song_info_artist(artist_name):
 
 @app.post('/trackinfo_tag/{tag}', status_code=status.HTTP_200_OK)
 def get_song_info_tag(tag):
-    track = db.query(trackmodel.track).filter(tag in trackmodel.track.tags).first()
+    tracks = db.query(trackmodel.track).filter(tag in trackmodel.track.tags).limit(12).all()
     detailed_tracks =[]
-    if track:
-        detailed_tracks.append({
-            "track_id": track.track_id,
-            "track_name": track.name,
-            "artist": track.artist,
-            "genre": track.genre,
-        })
+    if tracks:
+        for track in tracks:
+            detailed_tracks.append({
+                "track_id": track.track_id,
+                "track_name": track.name,
+                "artist": track.artist,
+                "genre": track.genre,
+            })
     else:
         raise HTTPException(status_code=404, detail="Tag not found")
 
@@ -263,15 +284,16 @@ def get_song_info_tag(tag):
 
 @app.post('/trackinfo_genre/{genre_name}', status_code=status.HTTP_200_OK)
 def get_song_info_genre(genre_name):
-    track = db.query(trackmodel.track).filter(trackmodel.track.genre == genre_name).first()
+    tracks = db.query(trackmodel.track).filter(trackmodel.track.genre == genre_name).limit(12).all()
     detailed_tracks =[]
-    if track:
-        detailed_tracks.append({
-            "track_id": track.track_id,
-            "track_name": track.name,
-            "artist": track.artist,
-            "genre": track.genre,
-        })
+    if tracks:
+        for track in tracks:
+            detailed_tracks.append({
+                "track_id": track.track_id,
+                "track_name": track.name,
+                "artist": track.artist,
+                "genre": track.genre,
+            })
     else:
         raise HTTPException(status_code=404, detail="Genre not found")
 

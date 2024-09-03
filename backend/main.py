@@ -36,6 +36,15 @@ class User(BaseModel):
     email : EmailStr
     password : str
     
+    
+class UserUpdate(BaseModel):
+    id : int
+    firstname : str
+    lastname : str
+    gender : str
+    username : str
+    email : EmailStr
+    password : str
 
     
 @app.get("/", response_model=list[User], status_code=status.HTTP_200_OK)
@@ -52,10 +61,9 @@ def get_user_by_username(ID: int, db: Session = Depends(get_db)):
 
 
 # email error should be done
-@app.post("/register", response_model=User, status_code=status.HTTP_201_CREATED)
+@app.post("/register", response_model=UserUpdate, status_code=status.HTTP_201_CREATED)
 def Register(user: User):
     newUser = usermodel.User(
-                          userid = user.id,
                           firstname=user.firstname,
                           lastname = user.lastname, 
                           gender = user.gender,

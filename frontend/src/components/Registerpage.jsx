@@ -4,6 +4,7 @@ import axios from 'axios';  // Import axios
 
 
 const RegisterPage = () => {
+  const [userid, setUserid] = useState('');
   const [username, setUsername] = useState('');
   const [gender, setGender] = useState('');
   const [password, setPassword] = useState('');
@@ -44,7 +45,7 @@ const RegisterPage = () => {
     }
     
     try {
-      const response = await axios.post('http://sessionhost:8000/register', {
+      const response = await axios.post('http://localhost:8000/register', {
         firstname : firstname,
         lastname : lastname,
         gender : gender,
@@ -53,10 +54,11 @@ const RegisterPage = () => {
         password : password,
       });
       console.log('User registered:', response.data);
-      setSuccess('Registration successful! Login to enjoy!'); // Set success message
-      sessionStorage.setItem('user_name', response.data.username); // Store username in session storage
+      setSuccess('Registration successful!'); // Set success message
+      // sessionStorage.setItem('user_name', response.data.username); // Store username in session storage
       sessionStorage.setItem('userID', response.data.id); // Store user ID in session storage
       sessionStorage.setItem('isNewUser', 'true'); // Store token in session storage
+      navigate('/preferences'); // Redirect to the preferences page
     } catch (error) {
       console.error('Error registering:', error.response.data);
       setError(error.response.data.detail);

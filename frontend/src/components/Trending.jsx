@@ -10,7 +10,7 @@ const Trending = () => {
 
   useEffect(() => {
     // Fetch trending songs from backend
-    axios.get('http://sessionhost:8001/populartracks')  // Update with your actual URL
+    axios.get('http://localhost:8001/populartracks')  // Update with your actual URL
       .then(response => {
         setTrendingSongs(response.data);
       })
@@ -25,7 +25,7 @@ const Trending = () => {
     } else {
       // Fetch similar tracks if not already fetched
       if (!similarTracks[trackId]) {
-        axios.post(`http://sessionhost:8001/getsimilartrack/${trackId}`, { top_n: 2 })  // Update with your actual URL
+        axios.post(`http://localhost:8001/getsimilartrack/${trackId}`, { top_n: 2 })  // Update with your actual URL
           .then(response => {
             setSimilarTracks(prev => ({ ...prev, [trackId]: response.data.similar_tracks }));
           })

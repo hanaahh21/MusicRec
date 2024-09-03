@@ -12,6 +12,7 @@ import RegisterPage from './components/Registerpage';
 import Profile from './components/Profile';
 import Preferences from './components/Preferences';
 import Song from './components/Song';
+import Recommendations from './components/Recommendations';
 //import Trending2 from './components/Trending2';
 
 const App = () => {
@@ -42,16 +43,18 @@ const App = () => {
                   <Route path="/foryou" element={<Foryou />} />
                   <Route path="/chatbot" element={<Chatbot />} />
                   <Route path="/profile" element={<Profile />} />
-                  <Route path="/preferences" element={<Preferences />} />
-                  <Route path="/song" element={<Song />} />
+                  {/* <Route path="/preferences" element={<Preferences />} /> */}
+                  <Route path="/song/:trackId" element={<Song />} />
+                  <Route path="/recommendations" element={<Recommendations />} />
                 </>
               ) : (
                 <>
                   <Route path="/foryou" element={<Navigate to="/login" />} />
                   <Route path="/chatbot" element={<Navigate to="/login" />} />
                   <Route path="/profile" element={<Navigate to="/login" />} />
-                  <Route path="/preferences" element={<Navigate to="/login" />} />
-                  <Route path="/song" element={<Song />} />
+                  {/* <Route path="/preferences" element={<Navigate to="/login" />} /> */}
+                  <Route path="/song/:trackId" element={<Navigate to="/login" />} />
+                  <Route path="/recommendations" element={<Navigate to="/login" />} />
                 </>
               )}
             </Routes>

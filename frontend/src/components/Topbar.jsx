@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Topbar = ({ isLoggedIn, handleLogout }) => {
   const [searchType, setSearchType] = useState(''); // To store the selected search type
@@ -18,7 +19,6 @@ const Topbar = ({ isLoggedIn, handleLogout }) => {
     navigate('/register'); // Navigate to Signup page
   };
 
-
   // Handle dropdown selection change
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
@@ -30,12 +30,34 @@ const Topbar = ({ isLoggedIn, handleLogout }) => {
     setQuery(e.target.value);
   };
 
-  // Handle the search action
-  const handleSearch = () => {
-    if (searchType && query) {
-      navigate(`/recommendations?${searchType}=${query}`); // Redirect to recommendations based on selection
+  const fetchTrackIdByName = async (trackName) => {
+    try {
+      const response = await axios.post(`http://localhost:8001/trackinfo_name/${trackName}`);
+      const track = response.data.track_info[0]; // Assuming track_info contains an array with one track
+      return track.track_id;
+    } catch (error) {
+      console.error("Error fetching track ID:", error);
+      throw new Error("Track not found");
     }
   };
+  
+
+  const handleSearch = async () => {
+    if (searchType && query) {
+      if (searchType === 'song') {
+        try {
+          const trackId = await fetchTrackIdByName(query);
+          navigate(`/song/${trackId}`); // Redirect to the song page by ID
+        } catch (error) {
+          // Handle error (e.g., display a message to the user)
+          console.error("Error finding track ID:", error);
+        }
+      } else {
+        navigate(`/recommendations?${searchType}=${query}`); // Redirect to recommendations page
+      }
+    }
+  };
+  
 
   return (
     <div className="topbar flex items-center justify-between p-4 bg-blue-600 text-white">
@@ -60,7 +82,7 @@ const Topbar = ({ isLoggedIn, handleLogout }) => {
           placeholder={`Search by ${searchType || '...'}`}
           value={query}
           onChange={handleQueryChange}
-          className="p-2 rounded"
+          className="p-2 rounded bg-white text-black"
           disabled={!searchType}
         />
 
@@ -105,9 +127,8 @@ const Topbar = ({ isLoggedIn, handleLogout }) => {
               Signup
             </button>
           </>
-
-      )}
-    </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -13,7 +13,7 @@ const Sidebar = () => {
   useEffect(() => {
     if (user_id) {
       // Fetch user details from the backend
-      axios.get(`http://sessionhost:8000/user/${user_id}`)
+      axios.get(`http://localhost:8000/user/${user_id}`)
         .then(response => {
           const data = response.data;
           sessionStorage.setItem('user_name', data.username)

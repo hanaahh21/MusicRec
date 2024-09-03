@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Recommended = () => {
   const [recommendedSongs, setRecommendedSongs] = useState([]);
@@ -19,7 +20,7 @@ const Recommended = () => {
   useEffect(() => {
     if (userId) {
       // Fetch recommended songs based on user ID
-      axios.post(`http://sessionhost:8001/recommend/b80344d063b5ccb3212f76538f3d9e43d87dca9e`, { top_n: 10 }) // Update with your actual URL
+      axios.post(`http://localhost:8001/recommend/b80344d063b5ccb3212f76538f3d9e43d87dca9e`, { top_n: 10 }) // Update with your actual URL
         .then(response => {
           setRecommendedSongs(response.data.recommended_tracks);
           setLoading(false);
@@ -41,7 +42,7 @@ const Recommended = () => {
     } else {
       // Fetch similar tracks if not already fetched
       if (!similarTracks[trackId]) {
-        axios.post(`http://sessionhost:8001/getsimilartrack/${trackId}`, { top_n: 2 })  // Update with your actual URL
+        axios.post(`http://localhost:8001/getsimilartrack/${trackId}`, { top_n: 2 })  // Update with your actual URL
           .then(response => {
             setSimilarTracks(prev => ({ ...prev, [trackId]: response.data.similar_tracks }));
           })
@@ -68,7 +69,10 @@ const Recommended = () => {
               <h3 className="text-xl font-semibold mb-2">{song.track_name}</h3>
               <p className="text-gray-600 mb-4">{song.artist} - {song.genre}</p>
               <div className="flex space-x-4">
-                <a href={`/song/${song.track_id}`} className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Go to Song</a>
+                {/* <a href={`/song/${song.track_id}`} className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Go to Song</a> */}
+                <Link to={`/song/${song.track_id}`} className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                  Go to Song
+                </Link>
                 <div className="relative">
                   <button
                     className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300"
@@ -79,9 +83,9 @@ const Recommended = () => {
                   {visibleDropdown === index && (
                     <div className="dropdown-content absolute bg-white shadow-lg rounded-lg mt-2 py-2 w-48 z-10">
                       {similarTracks[song.track_id]?.slice(0, 2).map((relatedSong, idx) => (
-                        <a href={`/song/${relatedSong.track_id}`} key={idx} className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                          {relatedSong.track_name}
-                        </a>
+                        <Link to={`/song/${relatedSong.track_id}`} key={idx} className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                        {relatedSong.track_name}
+                      </Link>
                       ))}
                     </div>
                   )}

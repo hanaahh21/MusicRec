@@ -176,7 +176,7 @@ const Profile = () => {
   useEffect(() => {
     if (user_id) { // Ensure username is available
       // Fetch user details based on logged-in username
-      axios.get(`http://sessionhost:8000/user/${user_id}`)
+      axios.get(`http://localhost:8000/user/${user_id}`)
         .then(response => { 
           const userData = response.data;
           setProfile({
