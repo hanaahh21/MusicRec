@@ -54,7 +54,7 @@ const RegisterPage = () => {
         password : password,
       });
       console.log('User registered:', response.data);
-      setSuccess('Registration successful! Login to Enjoy'); // Set success message
+      // setSuccess('Registration successful! Login to Enjoy'); // Set success message
       // sessionStorage.setItem('user_name', response.data.username); // Store username in session storage
       // sessionStorage.setItem('userID', response.data.id); // Store user ID in session storage
       sessionStorage.setItem('isNewUser', 'true'); // Store token in session storage
