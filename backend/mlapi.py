@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel , Field
 from database import engine, get_db, SessionLocal
 from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import NearestNeighbors
 from typing import List
 import pickle, keras
 import pandas as pd
@@ -63,21 +64,70 @@ X_test_scaled = np.load('X_train_scaled.npy')
 music_info = pd.read_csv('Music Info.csv')
 df = music_info.drop(["name", "artist", "spotify_preview_url", "spotify_id", "tags"], axis=1)
 
-@app.post("/getsimilartrack/{track_id}", status_code = status.HTTP_200_OK)
-def get_similar_tracks_by_id(track_id : str, top_n: int = 10):
-    filtered_df = df[df['track_id'] == track_id]
+# @app.post("/getsimilartrack/{track_id}", status_code = status.HTTP_200_OK)
+# def get_similar_tracks_by_id(track_id : str, top_n: int = 10):
+#     filtered_df = df[df['track_id'] == track_id]
     
-    if filtered_df.empty:
-        raise HTTPException(status_code=404, detail="Track ID not found")
+#     if filtered_df.empty:
+#         raise HTTPException(status_code=404, detail="Track ID not found")
    
-    track_index = filtered_df.index[0]
-    track_features = X_test_scaled[track_index].reshape(1, -1)
-    similarities = np.dot(X_test_scaled, track_features.T).flatten()
-    similar_indices = np.argsort(similarities)[-top_n:]
-    similar_track_ids = df.iloc[similar_indices]['track_id'].tolist()
+#     track_index = filtered_df.index[0]
+#     track_features = X_test_scaled[track_index].reshape(1, -1)
+#     similarities = np.dot(X_test_scaled, track_features.T).flatten()
+#     similar_indices = np.argsort(similarities)[-top_n:]
+#     similar_track_ids = df.iloc[similar_indices]['track_id'].tolist()
+    
+#     similar_tracks_list = []
+#     for similar_track_id in similar_track_ids:
+#         track = db.query(trackmodel.track).filter(trackmodel.track.track_id == similar_track_id).first()
+#         if track:
+#             similar_tracks_list.append({
+#                 "track_id": track.track_id,
+#                 "track_name": track.name,
+#                 "artist": track.artist,
+#                 "genre": track.genre
+#             })
+    
+#     return {"similar_tracks": similar_tracks_list}
+
+
+import joblib
+
+knn_model = joblib.load('knn_model.pkl')
+
+df_encoded = pd.read_csv('df_encoded.csv')
+# with open('knn_model.pkl', 'rb') as model_file:
+#     knn_model = pickle.load(model_file)
+# Function to recommend similar tracks
+@app.post("/getsimilartrack/{track_id}", status_code = status.HTTP_200_OK)
+def recommend_similar_tracks(track_id:str, n_neighbors:int =10):
+    # Find the index of the given track_id
+    try:
+        track_index = df_encoded[df_encoded['track_id'] == track_id].index[0]
+    except IndexError:
+        print(f"Track ID {track_id} not found in the dataset.")
+        return []
+
+    # Get the row index of the specified track_id
+    track_index = df_encoded[df_encoded['track_id'] == track_id].index[0]
+
+    # Extract the feature vector using .iloc to get the row by index
+    feature_vector = df_encoded.drop(columns=['track_id']).iloc[track_index]
+
+    # Convert the Series to a DataFrame to retain feature names
+    feature_vector_df = feature_vector.to_frame().transpose()
+
+    # Find the nearest neighbors
+    distances, indices = knn_model.kneighbors(feature_vector_df)
+
+    # Exclude the input track itself from the results
+    similar_indices = indices[0][1:n_neighbors + 1]
+
+    # Get the track IDs of similar tracks
+    similar_tracks = df_encoded.iloc[similar_indices]['track_id'].tolist()
     
     similar_tracks_list = []
-    for similar_track_id in similar_track_ids:
+    for similar_track_id in similar_tracks:
         track = db.query(trackmodel.track).filter(trackmodel.track.track_id == similar_track_id).first()
         if track:
             similar_tracks_list.append({
@@ -88,8 +138,6 @@ def get_similar_tracks_by_id(track_id : str, top_n: int = 10):
             })
     
     return {"similar_tracks": similar_tracks_list}
-
-
 
 
 

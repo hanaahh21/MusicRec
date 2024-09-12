@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import { BrowserRouter as  Route, Routes, Navigate } from 'react-router-dom';
+import {  Route, Routes, Navigate } from 'react-router-dom';
 
 
 import Foryou from './components/Foryou'
