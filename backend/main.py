@@ -5,6 +5,7 @@ from enum import Enum
 from sqlalchemy.orm import Session
 from database import SessionLocal, get_db
 import usermodel as usermodel
+import chatbot as chatbot
 
 app = FastAPI()
 db = SessionLocal()
@@ -45,8 +46,23 @@ class UserUpdate(BaseModel):
     username : str
     email : EmailStr
     password : str
-
     
+class Chatbot(BaseModel):
+    response : str
+    
+class ChatbotRequest(BaseModel):
+    user_question: str
+
+
+@app.post("/chatbot", response_model=Chatbot, status_code=status.HTTP_200_OK)
+def chatbot_request(request: ChatbotRequest):
+    try:
+        # Use the user_input function from the chatbot module
+        response = chatbot.user_input(request.user_question)  # Access the user_question attribute
+        return {"response": response}
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
 @app.get("/", response_model=list[User], status_code=status.HTTP_200_OK)
 def getAll_Users():
     return db.query(usermodel.User).all()

@@ -5,3 +5,5 @@ final_user_based.pkl
 User Listening History.csv
 knn_model.pkl
 df_encoded.csv
+.env
+faiss_index
