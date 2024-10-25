@@ -32,7 +32,7 @@ const Recommendations = () => {
   ];
 
   return (
-    <div className="recommendations-page p-4 flex flex-col h-screen w-full"
+    <div className="recommendations-page p-4 flex flex-col min-h-screen w-full"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',

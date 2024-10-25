@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import backgroundImage from '../assets/background.jpg'; // Adjust the path as needed
+import backgroundImage from '../assets/background.jpg';
 
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');

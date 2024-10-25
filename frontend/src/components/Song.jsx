@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -44,8 +42,13 @@ const Song = () => {
     window.open(song?.link, '_blank'); // Redirect to Spotify URL
   };
 
+  const handleSearch = (songName) => {
+    const searchUrl = `https://open.spotify.com/search/${encodeURIComponent(songName)}`;
+    window.open(searchUrl, '_blank'); // Open the search URL in a new tab
+  };
+
   return (
-    <div className="song-page p-4 flex flex-col h-screen w-full"
+    <div className="song-page p-4 flex flex-col min-h-screen w-full"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
@@ -54,10 +57,10 @@ const Song = () => {
     >
       {/* Song Details */}
       <div className="song-details mb-6 bg-white p-4 rounded-lg shadow-md opacity-90"
-      style={{
-        backgroundColor: 'rgba(255, 255, 255, 0.5)', // White with 70% opacity; adjust last value for transparency
-        backdropFilter: 'blur(10px)', // Adds a subtle blur for a glass effect
-      }}
+        style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.5)', // White with 70% opacity; adjust last value for transparency
+          backdropFilter: 'blur(10px)', // Adds a subtle blur for a glass effect
+        }}
       >
         {song ? (
           <>
@@ -67,9 +70,15 @@ const Song = () => {
             <p className="text-md text-gray-700 mb-4">{song.year}</p>
             <button
               onClick={handlePlayPause}
-              className="py-2 px-4 rounded-lg text-white font-bold bg-green-500"
+              className="mt-4 py-2 px-4 rounded-lg text-white font-bold bg-green-500"
             >
-              Play on Spotify
+              Play song preview
+            </button>
+            <button
+              onClick={() => handleSearch(song.track_name)}
+              className="mt-4 py-2 px-4 rounded-lg text-white font-bold bg-blue-500 mt-2"
+            >
+              Search on Spotify
             </button>
           </>
         ) : (
@@ -90,12 +99,6 @@ const Song = () => {
                 key={similarSong.track_id}
                 className={`similar-song p-4 relative ${randomGradient} rounded-lg shadow hover:shadow-lg transition-shadow duration-300`}
               >
-                {/* Uncomment this if you have cover images */}
-                {/* <img
-                  src={similarSong.cover_image} // Ensure you have this property
-                  alt={similarSong.track_name}
-                  className="w-full h-40 object-cover rounded-t-lg"
-                /> */}
                 <div className="p-2">
                   <h3 className="text-lg font-semibold">{similarSong.track_name}</h3>
                   <p className="text-gray-600">{similarSong.artist}</p>

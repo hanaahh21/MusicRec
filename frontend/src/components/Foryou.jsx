@@ -9,7 +9,7 @@ const Foryou = () => {
   
   return (
     <div 
-    className="bgflex flex-col h-screen"
+    className="bgflex flex-col min-h-screen"
     style={{
       backgroundImage: `url(${backgroundImage})`,
       backgroundSize: 'cover',
