@@ -13,7 +13,7 @@ const Trending = () => {
 
   // Fetch trending songs from the backend
   useEffect(() => {
-    axios.get('http://localhost:8001/populartracks') // Update with your actual URL
+    axios.get('http://localhost:8001/populartracks') 
       .then(response => {
         setTrendingSongs(response.data);
       })

@@ -84,7 +84,7 @@ const AddSong = () => {
     >
       <div className="p-4 bg-white rounded shadow-lg max-w-lg min-h-screen mx-auto"
     style={{
-      backgroundColor: 'rgba(255, 255, 255, 0.5)', // White with 70% opacity; adjust last value for transparency
+      backgroundColor: 'rgba(255, 255, 255, 0.5)', /
       backdropFilter: 'blur(10px)', // Adds a subtle blur for a glass effect
     }}
     >

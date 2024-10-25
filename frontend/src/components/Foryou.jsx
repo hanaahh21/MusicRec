@@ -28,11 +28,7 @@ const Foryou = () => {
         </div>
 
         {/* For You Section */}
-        <div className="w-1/2 p-4">
-        {/*<h2 className="text-2xl font-bold mb-4">Trending Songs</h2> */}          {/* Add specific content or components for "For You" section here */}
-          {/*<div className="p-4 bg-gray-200 rounded-lg">
-            <p>Your personalized music recommendations will appear here.</p>
-          </div>*/}
+        <div className="w-1/2 p-4">  
           <Recommended />
         </div>
       </div>

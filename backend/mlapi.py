@@ -64,6 +64,9 @@ class TrackCreate(BaseModel):
     time_signature: int
 
 
+
+
+
 # upload music_info
 
 @app.post("/uploadtrack", status_code=200)
@@ -79,7 +82,12 @@ def uploadTrack():
     return {"message": "Data uploaded successfully"}
 
 
-## new model ---------------------------------------------
+
+
+
+## similarsongs
+
+
 with open('models\\new.pkl ', 'rb') as f:
     new_model = cloudpickle.load(f)
     
@@ -103,76 +111,9 @@ def recommend_similar_tracks(track_id:str, n_neighbors:int =10):
     
        
 
-##old similar track model ---------------------------------------------
-
-
-# get similar tracks
-# with open('models\\model_for_similar_songs.pkl', 'rb') as file:
-#     model = pickle.load(file)
-
-# X_test_scaled = np.load('models\\X_train_scaled.npy')
-# music_info = pd.read_csv('models\\Music Info.csv')
-# df = music_info.drop(["name", "artist", "spotify_preview_url", "spotify_id", "tags"], axis=1)
 
 
 
-
-# import joblib
-
-# knn_model = joblib.load('models\\knn_model.pkl')
-
-# df_encoded = pd.read_csv('models\\df_encoded.csv')
-
-# @app.post("/getsimilartrack/{track_id}", status_code = status.HTTP_200_OK)
-# def recommend_similar_tracks(track_id:str, n_neighbors:int =10):
-#     # Find the index of the given track_id
-#     try:
-#         track_index = df_encoded[df_encoded['track_id'] == track_id].index[0]
-#     except IndexError:
-#         print(f"Track ID {track_id} not found in the dataset.")
-#         return []
-
-#     # Get the row index of the specified track_id
-#     track_index = df_encoded[df_encoded['track_id'] == track_id].index[0]
-
-#     # Extract the feature vector using .iloc to get the row by index
-#     feature_vector = df_encoded.drop(columns=['track_id']).iloc[track_index]
-
-#     # Convert the Series to a DataFrame to retain feature names
-#     feature_vector_df = feature_vector.to_frame().transpose()
-
-#     # Find the nearest neighbors
-#     distances, indices = knn_model.kneighbors(feature_vector_df)
-
-#     # Exclude the input track itself from the results
-#     similar_indices = indices[0][1:n_neighbors + 1]
-
-#     # Get the track IDs of similar tracks
-#     similar_tracks = df_encoded.iloc[similar_indices]['track_id'].tolist()
-    
-#     similar_tracks_list = []
-#     for similar_track_id in similar_tracks:
-#         track = db.query(trackmodel.track).filter(trackmodel.track.track_id == similar_track_id).first()
-#         if track:
-#             similar_tracks_list.append({
-#                 "track_id": track.track_id,
-#                 "track_name": track.name,
-#                 "artist": track.artist,
-#                 "genre": track.genre
-#             })
-    
-#     return {"similar_tracks": similar_tracks_list}
-
-## end-------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-##  old model -------------------------------------------------------------------------
 
 # Load your model and data
 # with open('models\\final_user_based.pkl', 'rb') as listening_file:
@@ -182,36 +123,6 @@ listening_df = pd.read_csv('models\\User Listening History.csv')
 aggregated_df = listening_df.groupby(['track_id', 'user_id'])['playcount'].sum().reset_index()
 all_tracks = set(aggregated_df['track_id'].unique())
 
-# @app.post("/recommend/{user_id}", status_code=status.HTTP_200_OK)
-# def recommend_top_tracks(user_id: str, top_n: int = 10):
-#     # row_count = aggregated_df[aggregated_df['user_id'] == user_id].shape[0]
-#     predictions = []
-#     for track_id in all_tracks:
-#         prediction = listening_model.predict(user_id, track_id)
-#         predictions.append((track_id, prediction.est))
-    
-#     # Sort the predictions by estimated playcount in descending order
-#     predictions.sort(key=lambda x: x[1], reverse=True)
-    
-#     # Get the top N tracks
-#     top_tracks = predictions[:top_n]
-    
-#     top_tracks_json = [{"track_id": track_id, "estimated_playcount": int(est)} for track_id, est in top_tracks]
-#     detailed_tracks = []
-    
-#     for i in top_tracks_json:
-#         track = db.query(trackmodel.track).filter(trackmodel.track.track_id == i['track_id']).first()
-#         if track:
-#             detailed_tracks.append({
-#                 "track_id": i['track_id'],
-#                 "track_name": track.name,
-#                 "artist": track.artist,
-#                 "genre": track.genre,
-    #             "estimated_playcount": i['estimated_playcount']
-    #         })
-    # return {"recommended_tracks": detailed_tracks}
-
-## end-------------------------------------------------------------------------------------------------
 
 
 with open ('A:\\OneDrive - University of Moratuwa\\Projects\\MusicRec\\backend\\models\\userRec_model.pkl', 'rb') as file:
@@ -233,6 +144,9 @@ def recommend_top_tracks(user_id: str, top_n: int = 10):
             })
     
     return {"recommended_tracks": recommended_tracks}
+
+
+
 
 
 
@@ -268,6 +182,14 @@ def add_track(track: TrackCreate, db: Session = Depends(get_db)):
 
     return {"message": "Track added successfully", "track_id": new_track.track_id}
 
+
+
+
+
+
+
+
+
 @app.get('/populartracks/',status_code=status.HTTP_200_OK)
 def get_most_popular_songs(n=10):
     # Filter DataFrame to include only the specified track_ids
@@ -295,6 +217,11 @@ def get_most_popular_songs(n=10):
 
 
 
+
+
+
+
+
 @app.post('/trackinfo_name/{trackname}', status_code=status.HTTP_200_OK)
 def get_song_info_track(trackname):
     track = db.query(trackmodel.track).filter(trackmodel.track.name == trackname).first()
@@ -310,6 +237,11 @@ def get_song_info_track(trackname):
         raise HTTPException(status_code=404, detail="Track not found")
 
     return {"track_info": detailed_tracks}
+
+
+
+
+
 
 @app.post('/trackinfo_id/{id}', status_code=status.HTTP_200_OK)
 def get_song_info_track(id):
@@ -332,6 +264,9 @@ def get_song_info_track(id):
 
 
 
+
+
+
 @app.post('/trackinfo_artist/{artist_name}', status_code=status.HTTP_200_OK)
 def get_song_info_artist(artist_name):
     tracks = db.query(trackmodel.track).filter(trackmodel.track.artist == artist_name).limit(12).all()
@@ -348,6 +283,10 @@ def get_song_info_artist(artist_name):
         raise HTTPException(status_code=404, detail="Artist not found")
 
     return {"track_info": detailed_tracks}
+
+
+
+
 
 
 
@@ -370,6 +309,9 @@ def get_song_info_tag(tag):
 
 
 
+
+
+
 @app.post('/trackinfo_genre/{genre_name}', status_code=status.HTTP_200_OK)
 def get_song_info_genre(genre_name):
     tracks = db.query(trackmodel.track).filter(trackmodel.track.genre == genre_name).limit(12).all()
@@ -386,6 +328,11 @@ def get_song_info_genre(genre_name):
         raise HTTPException(status_code=404, detail="Genre not found")
 
     return {"track_info": detailed_tracks}
+
+
+
+
+
 
 
 
