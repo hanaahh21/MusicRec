@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import backgroundImage from '../assets/background.jpg';
 
-
 const AddSong = () => {
   // Define state for each field in the form
   const [songData, setSongData] = useState({
@@ -76,45 +75,45 @@ const AddSong = () => {
 
   return (
     <div className='flex justify-center items-center min-h-screen'
-    style={{
-      backgroundImage: `url(${backgroundImage})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-    }}
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
       <div className="p-4 bg-white rounded shadow-lg max-w-lg min-h-screen mx-auto"
-    style={{
-      backgroundColor: 'rgba(255, 255, 255, 0.5)', /
-      backdropFilter: 'blur(10px)', // Adds a subtle blur for a glass effect
-    }}
-    >
-      <h2 className="text-xl font-bold mb-4">Add New Song</h2>
-      <form onSubmit={handleSubmit}>
+        style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.5)', // Fixed here
+          backdropFilter: 'blur(10px)', // Adds a subtle blur for a glass effect
+        }}
+      >
+        <h2 className="text-xl font-bold mb-4">Add New Song</h2>
+        <form onSubmit={handleSubmit}>
 
-        {/* Generate form fields dynamically */}
-        {Object.keys(songData).map((field, index) => (
-          <div className="mb-3" key={index}>
-            <label className="block text-sm font-medium mb-1 capitalize" htmlFor={field}>
-              {field.replace('_', ' ')}
-            </label>
-            <input
-              type="text"
-              id={field}
-              name={field}
-              value={songData[field]}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded"
-              placeholder={`Enter ${field.replace('_', ' ')}`}
-              required
-            />
-          </div>
-        ))}
+          {/* Generate form fields dynamically */}
+          {Object.keys(songData).map((field, index) => (
+            <div className="mb-3" key={index}>
+              <label className="block text-sm font-medium mb-1 capitalize" htmlFor={field}>
+                {field.replace('_', ' ')}
+              </label>
+              <input
+                type="text"
+                id={field}
+                name={field}
+                value={songData[field]}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+                placeholder={`Enter ${field.replace('_', ' ')}`}
+                required
+              />
+            </div>
+          ))}
 
-        <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white font-bold rounded hover:bg-blue-700">
-          Add Song
-        </button>
-      </form>
-    </div>
+          <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white font-bold rounded hover:bg-blue-700">
+            Add Song
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
