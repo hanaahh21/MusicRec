@@ -183,17 +183,101 @@ const Trending = () => {
     setSelectedSongId(null);
   };
 
+  // return (
+  //   <div className="flex h-screen w-full overflow-hidden ">
+  //     <div className="flex flex-col p-6 bg-gray-100 rounded-3xl border">
+  //       <h2 className="text-3xl font-bold mb-8 text-center text-gray-500">
+  //         Trending Songs
+  //       </h2>
+  //       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto">
+  //         {trendingSongs.map((song, index) => {
+  //           const randomGradient =
+  //             gradients[Math.floor(Math.random() * gradients.length)];
+
+  //           return (
+  //             <div
+  //               key={index}
+  //               className={`trending-card p-6 rounded-lg shadow-lg relative ${randomGradient} h-40 transition-all duration-300 ease-in-out`}
+  //             >
+  //               <h3 className="text-xl text-center font-semibold text-white">
+  //                 {song.track_name}
+  //               </h3>
+  //               <p className="text-gray-200 mb-4 text-center">
+  //                 {song.artist} - {song.genre}
+  //               </p>
+
+  //               <div className="flex justify-center mb-2">
+  //                 <button
+  //                   className="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-600 flex items-center justify-center"
+  //                   onClick={() => handleSongClick(song.track_id)}
+  //                 >
+  //                   <FaPlay />
+  //                 </button>
+  //               </div>
+
+  //               <div className="text-xs text-white absolute bottom-2 left-0 right-0 text-center">
+  //                 <button
+  //                   className="hover:text-gray-300"
+  //                   onClick={() => openModal(song.track_id)}
+  //                 >
+  //                   Related Songs
+  //                 </button>
+  //               </div>
+  //             </div>
+  //           );
+  //         })}
+  //       </div>
+  //     </div>
+
+  //     {/* Modal for Related Songs */}
+  //     {isModalOpen && selectedSongId && (
+  //       <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-md flex justify-center items-center z-50">
+  //         <div className="bg-white bg-opacity-80 rounded-lg p-8 w-96 relative shadow-lg">
+  //           <button
+  //             className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+  //             onClick={closeModal}
+  //           >
+  //             <FaTimes className="text-xl" />
+  //           </button>
+
+  //           <h2 className="text-xl font-bold mb-4 text-center">
+  //             Related Songs
+  //           </h2>
+
+  //           <div className="flex flex-col space-y-4">
+  //             {similarTracks[selectedSongId]?.map((relatedSong, idx) => (
+  //               <div
+  //                 key={idx}
+  //                 className="flex justify-between items-center bg-white rounded-lg shadow-md p-3 hover:bg-gray-100 transition-colors"
+  //               >
+  //                 <div className="text-gray-800 font-semibold">
+  //                   {relatedSong.track_name}
+  //                 </div>
+  //                 <button
+  //                   onClick={() => handleRelatedSongClick(relatedSong.track_id)}
+  //                   className="text-blue-500 hover:text-blue-700"
+  //                 >
+  //                   <FaPlay className="text-lg" />
+  //                 </button>
+  //               </div>
+  //             ))}
+  //           </div>
+  //         </div>
+  //       </div>
+  //     )}
+  //   </div>
+  // );
+
   return (
-    <div className="flex h-screen overflow-hidden ">
-      <div className="flex flex-col p-6 bg-gray-100 rounded-3xl border">
+    <div className="flex h-screen w-full bg-gray-100 overflow-hidden">
+      <div className="flex flex-col flex-1 p-6 bg-gray-100 rounded-3xl border m-4">
         <h2 className="text-3xl font-bold mb-8 text-center text-gray-500">
           Trending Songs
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto">
           {trendingSongs.map((song, index) => {
             const randomGradient =
               gradients[Math.floor(Math.random() * gradients.length)];
-
             return (
               <div
                 key={index}
@@ -205,7 +289,6 @@ const Trending = () => {
                 <p className="text-gray-200 mb-4 text-center">
                   {song.artist} - {song.genre}
                 </p>
-
                 <div className="flex justify-center mb-2">
                   <button
                     className="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-600 flex items-center justify-center"
@@ -214,7 +297,6 @@ const Trending = () => {
                     <FaPlay />
                   </button>
                 </div>
-
                 <div className="text-xs text-white absolute bottom-2 left-0 right-0 text-center">
                   <button
                     className="hover:text-gray-300"
@@ -228,8 +310,6 @@ const Trending = () => {
           })}
         </div>
       </div>
-
-      {/* Modal for Related Songs */}
       {isModalOpen && selectedSongId && (
         <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-md flex justify-center items-center z-50">
           <div className="bg-white bg-opacity-80 rounded-lg p-8 w-96 relative shadow-lg">
@@ -239,11 +319,7 @@ const Trending = () => {
             >
               <FaTimes className="text-xl" />
             </button>
-
-            <h2 className="text-xl font-bold mb-4 text-center">
-              Related Songs
-            </h2>
-
+            <h2 className="text-xl font-bold mb-4 text-center">Related Songs</h2>
             <div className="flex flex-col space-y-4">
               {similarTracks[selectedSongId]?.map((relatedSong, idx) => (
                 <div
@@ -266,7 +342,7 @@ const Trending = () => {
         </div>
       )}
     </div>
-  );
+  );  
 };
 
 export default Trending;

@@ -153,8 +153,8 @@ def recommend_similar_tracks(track_id:str, n_neighbors:int =10):
 ##  old model -------------------------------------------------------------------------
 
 # Load your model and data
-with open('models\\final_user_based.pkl', 'rb') as listening_file:
-    listening_model = pickle.load(listening_file)
+# with open('models\\final_user_based.pkl', 'rb') as listening_file:
+#     listening_model = pickle.load(listening_file)
     
 listening_df = pd.read_csv('models\\User Listening History.csv')
 aggregated_df = listening_df.groupby(['track_id', 'user_id'])['playcount'].sum().reset_index()
@@ -192,12 +192,12 @@ all_tracks = set(aggregated_df['track_id'].unique())
 ## end-------------------------------------------------------------------------------------------------
 
 
-with open ('models\\userRec_model.pkl', 'rb') as file:
+with open ('A:\\OneDrive - University of Moratuwa\\Projects\\MusicRec\\backend\\models\\userRec_model.pkl', 'rb') as file:
     userRec_model = pickle.load(file)
     
 @app.post("/recommend/{user_id}", status_code=status.HTTP_200_OK)
 def recommend_top_tracks(user_id: str, top_n: int = 10):
-    rec_tracks = userRec_model.get_recommendations(user_id, top_n)
+    rec_tracks = userRec_model.get_recommendations(user_id)
     
     recommended_tracks = []
     for track_id in rec_tracks:
