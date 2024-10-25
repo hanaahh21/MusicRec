@@ -2,12 +2,20 @@ import React from 'react';
 import Recommended from './Recommended';
 import Trending from './Trending';
 import Chatbot from './Chatbot';
+import backgroundImage from '../assets/background.jpg';
 
 const Foryou = () => {
 
   
   return (
-    <div className="flex flex-col h-screen">
+    <div 
+    className="bgflex flex-col h-screen"
+    style={{
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }}
+    >
       {/* <Topbar isLoggedIn={isLoggedIn} handleLogout={handleLogout} /> */}
       
 

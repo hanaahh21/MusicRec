@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';  // Import axios
+import backgroundImage from '../assets/background.jpg'; 
 
 
 const RegisterPage = () => {
@@ -73,8 +74,19 @@ const RegisterPage = () => {
 
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div className="flex justify-center items-center h-screen bg-gray-100"
+    style={{
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }}
+    >
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
+      style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.5)', // White with 70% opacity; adjust last value for transparency
+        backdropFilter: 'blur(10px)', // Adds a subtle blur for a glass effect
+      }}
+      >
         <h2 className="text-2xl font-bold mb-6 text-center">
           Register
         </h2>
@@ -183,7 +195,7 @@ const RegisterPage = () => {
         </form>
         <p className="mt-4 text-center">
           Already have an account?{' '}
-          <button onClick={goToLogin} className="text-blue-500 hover:text-blue-600 font-semibold">
+          <button onClick={goToLogin} className="text-blue-500 hover:text-blue-800 font-semibold">
             Login
           </button>
         </p>

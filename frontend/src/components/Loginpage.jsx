@@ -2,8 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// import { useAuth } from '../context/AuthProvider'; // Adjust the import path
-
+import backgroundImage from '../assets/background.jpg'; // Adjust the path as needed
 
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -13,7 +12,6 @@ const LoginPage = ({ onLogin }) => {
   const registered = sessionStorage.getItem('isRegistered');
 
   const navigate = useNavigate();
-  // const { setUser } = useAuth(); // Use context to set user
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,30 +22,37 @@ const LoginPage = ({ onLogin }) => {
         username,
         password,
       });
-      console.log('User logged in:', response.data);
       setSuccess('Login successful!');
-      sessionStorage.setItem('userID', response.data.id); // Store username
-      sessionStorage.setItem('isNewUser', 'false'); // Store token in session storage
-      onLogin(); // Call the function passed as a prop to set the login state in the App component
-      if (registered === 'true') {
-        navigate('/preferences');
-      }
-      else{
-      navigate('/foryou'); // Redirect to the "For You" page
-    }
+      sessionStorage.setItem('userID', response.data.id);
+      sessionStorage.setItem('isNewUser', 'false');
+      onLogin();
+      navigate(registered === 'true' ? '/preferences' : '/foryou');
     } catch (error) {
-      console.error('Error logging in:', error.response.data);
       setError(error.response.data.detail);
     }
   };
 
   const goToSignUp = () => {
-    navigate('/register'); // Navigate to SignUpPage
+    navigate('/register');
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div
+      className="flex justify-center items-center h-screen"
+      
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div 
+      className="p-8 rounded-lg shadow-lg w-full max-w-md"
+      style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.5)', // White with 70% opacity; adjust last value for transparency
+        backdropFilter: 'blur(10px)', // Adds a subtle blur for a glass effect
+      }}
+      >
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
         {success && (
@@ -62,7 +67,7 @@ const LoginPage = ({ onLogin }) => {
 
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+            <label className="block text-white text-sm font-bold mb-2" htmlFor="username">
               Username
             </label>
             <input
@@ -106,3 +111,5 @@ const LoginPage = ({ onLogin }) => {
 };
 
 export default LoginPage;
+
+

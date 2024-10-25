@@ -39,7 +39,29 @@ class TrackInfo(BaseModel):
 class track(BaseModel):
     track_id : str
     
-
+# Pydantic model for creating a track
+class TrackCreate(BaseModel):
+    track_id: str
+    name: str
+    artist: str
+    spotify_preview_url: str
+    spotify_id: str
+    tags: list[str]
+    genre: str
+    year: int
+    duration_ms: int
+    danceability: float
+    energy: float
+    key: int
+    loudness: float
+    mode: int
+    speechiness: float
+    acousticness: float
+    instrumentalness: float
+    liveness: float
+    valence: float
+    tempo: float
+    time_signature: int
 
 
 # upload music_info
@@ -213,6 +235,38 @@ def recommend_top_tracks(user_id: str, top_n: int = 10):
     return {"recommended_tracks": recommended_tracks}
 
 
+
+@app.post('/add_track', response_model=dict, status_code=status.HTTP_201_CREATED)
+def add_track(track: TrackCreate, db: Session = Depends(get_db)):
+    new_track = trackmodel.track(
+        track_id=track.track_id,
+        name=track.name,
+        artist=track.artist,
+        spotify_preview_url=track.spotify_preview_url,
+        spotify_id=track.spotify_id,
+        tags=track.tags,
+        genre=track.genre,
+        year=track.year,
+        duration_ms=track.duration_ms,
+        danceability=track.danceability,
+        energy=track.energy,
+        key=track.key,
+        loudness=track.loudness,
+        mode=track.mode,
+        speechiness=track.speechiness,
+        acousticness=track.acousticness,
+        instrumentalness=track.instrumentalness,
+        liveness=track.liveness,
+        valence=track.valence,
+        tempo=track.tempo,
+        time_signature=track.time_signature
+    )
+    
+    db.add(new_track)
+    db.commit()
+    db.refresh(new_track)
+
+    return {"message": "Track added successfully", "track_id": new_track.track_id}
 
 @app.get('/populartracks/',status_code=status.HTTP_200_OK)
 def get_most_popular_songs(n=10):
