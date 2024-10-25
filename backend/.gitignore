@@ -1,0 +1,12 @@
+model_for_similar_songs.pkl
+Music Info.csv
+X_train_scaled.npy
+final_user_based.pkl
+User Listening History.csv
+knn_model.pkl
+df_encoded.csv
+.env
+faiss_index
+test_performance
+new.pkl
+userRec_model.pkl
