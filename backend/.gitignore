@@ -8,3 +8,5 @@ df_encoded.csv
 .env
 faiss_index
 test_performance
+new.pkl
+userRec_model.pkl

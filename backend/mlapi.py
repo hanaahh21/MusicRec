@@ -150,7 +150,7 @@ def recommend_similar_tracks(track_id:str, n_neighbors:int =10):
 
 
 
-
+##  old model -------------------------------------------------------------------------
 
 # Load your model and data
 with open('models\\final_user_based.pkl', 'rb') as listening_file:
@@ -160,34 +160,58 @@ listening_df = pd.read_csv('models\\User Listening History.csv')
 aggregated_df = listening_df.groupby(['track_id', 'user_id'])['playcount'].sum().reset_index()
 all_tracks = set(aggregated_df['track_id'].unique())
 
+# @app.post("/recommend/{user_id}", status_code=status.HTTP_200_OK)
+# def recommend_top_tracks(user_id: str, top_n: int = 10):
+#     # row_count = aggregated_df[aggregated_df['user_id'] == user_id].shape[0]
+#     predictions = []
+#     for track_id in all_tracks:
+#         prediction = listening_model.predict(user_id, track_id)
+#         predictions.append((track_id, prediction.est))
+    
+#     # Sort the predictions by estimated playcount in descending order
+#     predictions.sort(key=lambda x: x[1], reverse=True)
+    
+#     # Get the top N tracks
+#     top_tracks = predictions[:top_n]
+    
+#     top_tracks_json = [{"track_id": track_id, "estimated_playcount": int(est)} for track_id, est in top_tracks]
+#     detailed_tracks = []
+    
+#     for i in top_tracks_json:
+#         track = db.query(trackmodel.track).filter(trackmodel.track.track_id == i['track_id']).first()
+#         if track:
+#             detailed_tracks.append({
+#                 "track_id": i['track_id'],
+#                 "track_name": track.name,
+#                 "artist": track.artist,
+#                 "genre": track.genre,
+    #             "estimated_playcount": i['estimated_playcount']
+    #         })
+    # return {"recommended_tracks": detailed_tracks}
+
+## end-------------------------------------------------------------------------------------------------
+
+
+with open ('models\\userRec_model.pkl', 'rb') as file:
+    userRec_model = pickle.load(file)
+    
 @app.post("/recommend/{user_id}", status_code=status.HTTP_200_OK)
 def recommend_top_tracks(user_id: str, top_n: int = 10):
-    # row_count = aggregated_df[aggregated_df['user_id'] == user_id].shape[0]
-    predictions = []
-    for track_id in all_tracks:
-        prediction = listening_model.predict(user_id, track_id)
-        predictions.append((track_id, prediction.est))
+    rec_tracks = userRec_model.get_recommendations(user_id, top_n)
     
-    # Sort the predictions by estimated playcount in descending order
-    predictions.sort(key=lambda x: x[1], reverse=True)
-    
-    # Get the top N tracks
-    top_tracks = predictions[:top_n]
-    
-    top_tracks_json = [{"track_id": track_id, "estimated_playcount": int(est)} for track_id, est in top_tracks]
-    detailed_tracks = []
-    
-    for i in top_tracks_json:
-        track = db.query(trackmodel.track).filter(trackmodel.track.track_id == i['track_id']).first()
+    recommended_tracks = []
+    for track_id in rec_tracks:
+        track = db.query(trackmodel.track).filter(trackmodel.track.track_id == track_id).first()
         if track:
-            detailed_tracks.append({
-                "track_id": i['track_id'],
+            recommended_tracks.append({
+                "track_id": track.track_id,
                 "track_name": track.name,
                 "artist": track.artist,
-                "genre": track.genre,
-                "estimated_playcount": i['estimated_playcount']
+                "genre": track.genre
             })
-    return {"recommended_tracks": detailed_tracks}
+    
+    return {"recommended_tracks": recommended_tracks}
+
 
 
 @app.get('/populartracks/',status_code=status.HTTP_200_OK)
