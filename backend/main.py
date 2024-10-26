@@ -5,6 +5,7 @@ from enum import Enum
 from sqlalchemy.orm import Session
 from database import SessionLocal, get_db
 import usermodel as usermodel
+import chatbot as chatbot
 
 app = FastAPI()
 db = SessionLocal()
@@ -45,11 +46,32 @@ class UserUpdate(BaseModel):
     username : str
     email : EmailStr
     password : str
-
     
+class Chatbot(BaseModel):
+    response : str
+    
+class ChatbotRequest(BaseModel):
+    user_question: str
+
+
+@app.post("/chatbot", response_model=Chatbot, status_code=status.HTTP_200_OK)
+def chatbot_request(request: ChatbotRequest):
+    try:
+        # Use the user_input function from the chatbot module
+        response = chatbot.user_input(request.user_question)  # Access the user_question attribute
+        return {"response": response}
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    
+    
+    
+
 @app.get("/", response_model=list[User], status_code=status.HTTP_200_OK)
 def getAll_Users():
     return db.query(usermodel.User).all()
+
+
+
 
 
 @app.get("/user/{ID}", response_model=User, status_code=status.HTTP_200_OK)
@@ -58,6 +80,9 @@ def get_user_by_username(ID: int, db: Session = Depends(get_db)):
     if find_user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return find_user
+
+
+
 
 
 # email error should be done
@@ -95,6 +120,9 @@ def Register(user: User):
 
 
 
+
+
+
     
 @app.post("/login", response_model=OurBaseModel, status_code=status.HTTP_200_OK)
 def login(user : UserLogin, db: Session = Depends(get_db)):
@@ -110,6 +138,9 @@ def login(user : UserLogin, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
 
     return find_user
+
+
+
 
 
 

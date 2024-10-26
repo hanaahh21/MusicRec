@@ -1,6 +1,6 @@
 import  { useState , useEffect} from 'react';
 import { Link } from 'react-router-dom';
-import { FaUserCircle, FaCog, FaMoon, FaSun, FaSignOutAlt, FaHome } from 'react-icons/fa';
+import { FaUserCircle, FaCog, FaMoon, FaSun, FaSignOutAlt, FaHome, FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 
 const Sidebar = () => {
@@ -59,7 +59,7 @@ const Sidebar = () => {
         {/* Navigation Links */}
         <nav>
           <ul>
-          <li>
+            <li>
               <Link to="/foryou" className="flex items-center p-3 hover:bg-gray-700">
                 <FaHome size={20} className="mr-3" />
                 Home
@@ -71,12 +71,21 @@ const Sidebar = () => {
                 Profile
               </Link>
             </li>
-            <li>
-              <Link to="/settings" className="flex items-center p-3 hover:bg-gray-700">
-                <FaCog size={20} className="mr-3" />
-                Settings
-              </Link>
-            </li>
+            {user_id === '28' ? ( // Check if user_id is 28
+              <li>
+                <Link to="/addsong" className="flex items-center p-3 hover:bg-gray-700">
+                  <FaPlus size={20} className="mr-3" />
+                  Add Song
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <Link to="/settings" className="flex items-center p-3 hover:bg-gray-700">
+                  <FaCog size={20} className="mr-3" />
+                  Settings
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
 

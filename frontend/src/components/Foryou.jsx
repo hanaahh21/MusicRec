@@ -2,12 +2,20 @@ import React from 'react';
 import Recommended from './Recommended';
 import Trending from './Trending';
 import Chatbot from './Chatbot';
+import backgroundImage from '../assets/background.jpg';
 
 const Foryou = () => {
 
   
   return (
-    <div className="flex flex-col h-screen">
+    <div 
+    className="bgflex flex-col min-h-screen"
+    style={{
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }}
+    >
       {/* <Topbar isLoggedIn={isLoggedIn} handleLogout={handleLogout} /> */}
       
 
@@ -20,11 +28,7 @@ const Foryou = () => {
         </div>
 
         {/* For You Section */}
-        <div className="w-1/2 p-4">
-        {/*<h2 className="text-2xl font-bold mb-4">Trending Songs</h2> */}          {/* Add specific content or components for "For You" section here */}
-          {/*<div className="p-4 bg-gray-200 rounded-lg">
-            <p>Your personalized music recommendations will appear here.</p>
-          </div>*/}
+        <div className="w-1/2 p-4">  
           <Recommended />
         </div>
       </div>

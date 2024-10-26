@@ -13,6 +13,7 @@ import Profile from './components/Profile';
 import Preferences from './components/Preferences';
 import Song from './components/Song';
 import Recommendations from './components/Recommendations';
+import AddSong from './components/Addsong';
 //import Trending2 from './components/Trending2';
 
 const App = () => {
@@ -45,6 +46,7 @@ const App = () => {
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/preferences" element={<Preferences />} />
                   <Route path="/song/:trackId" element={<Song />} />
+                  <Route path="/addsong" element={<AddSong />} />
                   <Route path="/recommendations" element={<Recommendations />} />
                 </>
               ) : (
@@ -54,6 +56,7 @@ const App = () => {
                   <Route path="/profile" element={<Navigate to="/login" />} />
                   <Route path="/preferences" element={<Navigate to="/login" />} />
                   <Route path="/song/:trackId" element={<Navigate to="/login" />} />
+                  <Route path="/addsong" element={<Navigate to="/login" />} />
                   <Route path="/recommendations" element={<Navigate to="/login" />} />
                 </>
               )}
