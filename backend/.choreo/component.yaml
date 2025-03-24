@@ -1,64 +1,12 @@
-# +required The configuration file schema version
 schemaVersion: 1.1
 
-# +optional Incoming connection details for the component
 endpoints:
-  # Endpoint for chatbot
-  - name: chatbot
-    displayName: Chatbot
-    service:
-      basePath: /chatbot
-      port: 8010
-    type: REST
-    networkVisibilities:
-      - Public
-
-  # Endpoint for getting all users
-  - name: get_all_users
-    displayName: Get All Users
+  - name: user-service
+    displayName: User Service
     service:
       basePath: /
-      port: 8010
+      port: 8000
     type: REST
     networkVisibilities:
       - Public
-
-  # Endpoint for getting a specific user by ID
-  - name: get_user_by_id
-    displayName: Get User by ID
-    service:
-      basePath: /user/{ID}
-      port: 8010
-    type: REST
-    networkVisibilities:
-      - Public
-
-  # Endpoint for user registration
-  - name: register_user
-    displayName: Register User
-    service:
-      basePath: /register
-      port: 8010
-    type: REST
-    networkVisibilities:
-      - Public
-
-  # Endpoint for user login
-  - name: login_user
-    displayName: Login User
-    service:
-      basePath: /login
-      port: 8010
-    type: REST
-    networkVisibilities:
-      - Public
-
-  # Endpoint for deleting a user
-  - name: delete_user
-    displayName: Delete User
-    service:
-      basePath: /delete/{id}
-      port: 8010
-    type: REST
-    networkVisibilities:
-      - Public
+    schemaFilePath: openapi.yaml
