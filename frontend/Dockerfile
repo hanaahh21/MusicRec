@@ -18,7 +18,7 @@ USER root
 RUN mkdir -p /opt/app-root/src/.npm
 RUN chown -R 1001:0 /opt/app-root/src/
 RUN chmod -R 775 /opt/app-root/src/
-USER 1001
+USER 10014
 RUN npm install
 EXPOSE 5143
 CMD ["npm", "run", "dev"]
